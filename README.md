@@ -2,6 +2,11 @@
 
 Turn a bare topic into a complete business deck — outline, slide text, and speaker notes — with one prompt.
 
+## Languages / 语言
+
+- **English** — this README. English skill files are used as-is by agents.
+- **中文** — 完整的中文版技能说明与参考文档（`SKILL.zh-CN.md`、`references/slide-structures.zh-CN.md`、`references/copywriting-guide.zh-CN.md`）。如果你的 agent 主要用中文，把 `SKILL.zh-CN.md` 当作 `SKILL.md` 使用即可，结果同样是中文 PPT 文稿。
+
 ## What it does
 
 One-Click PPT is a small Agent Skill that turns a topic into a presentation-ready deck: a structured outline, per-slide headlines, bullets, visual suggestions, and speaker notes. It works in clients that support the Agent Skills format, including Claude Code, Cursor, Codex, and Gemini CLI.
@@ -116,9 +121,12 @@ Notes: "Here's what we need: $6M to scale sales and engineering. We're closing t
 ```text
 repository-root/
 ├── SKILL.md                    # main instructions
+├── SKILL.zh-CN.md              # 中文技能说明（Chinese）
 └── references/
     ├── slide-structures.md     # deck structures by purpose
-    └── copywriting-guide.md    # copy rules and examples
+    ├── slide-structures.zh-CN.md # 中文结构模板
+    ├── copywriting-guide.md    # copy rules and examples
+    └── copywriting-guide.zh-CN.md # 中文文案规则
 ```
 
 ## License

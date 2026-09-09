@@ -132,9 +132,47 @@ Pick the closest structure, then adapt slide count to the time limit (roughly on
 7. Consolidation — what we decided
 8. Next actions — owners and due dates
 
+## 11. Academic thesis proposal / defense (10 slides)
+
+1. Topic — the one-line question you are answering
+2. Motivation — why this question matters, who cares
+3. Prior work — what exists and where the gap is
+4. Research question & hypothesis — testable, specific
+5. Methodology — data, tools, and how you validate
+6. Expected contribution — what will be new
+7. Plan & timeline — phases with milestones
+8. Risks & contingency — what could go wrong and how you adapt
+9. Human subjects / ethics — if applicable, one honest slide
+10. Questions for the committee
+
+## 12. Research group meeting (8 slides)
+
+1. Update since last week — what happened, in two lines
+2. Paper / experiment deep dive — methods, results, screenshots
+3. What's working
+4. What's blocking me — the ask, stated clearly
+5. Interpretation — what the results mean, honestly
+6. Next steps — concrete and timeboxed
+7. Anything I need from the group
+8. Open questions
+
+## 13. Marketing campaign proposal (10 slides)
+
+1. Objective — the outcome, with a number
+2. Target audience — segments and where they hang out
+3. Campaign idea — the hook in one sentence
+4. Channels — where it runs and why those
+5. Creative direction — tone, visuals, and one sample concept
+6. Content plan — assets, cadence, owners
+7. Budget — spend and expected cost per result
+8. Success metrics — the three numbers that define "worked"
+9. Timeline — from kickoff to review
+10. Ask — what you need to approve today
+
 ## Rules of thumb
 
 - One slide per major message. If a slide needs more than five bullets, split it.
 - Slide 1 must state the outcome, not just the topic.
 - The "ask" slide should come last, never first.
 - For every data claim, keep the source one glance away (footnote or appendix).
+- Academic decks (defense, group meeting): put the citation right on the slide — it doubles as your backup if challenged.
