@@ -12,14 +12,15 @@ One-Click AI PPT evolution plan.
 - Design guidance for on-slide layout in SKILL.md
 - MIT license
 
+### v1.1.0 — Reference Depth (2026-09-11)
+
+- `references/design-guide.md` — layout, type scale, colour, chart selection
+- `references/zh-cn-adaptation.md` — Chinese-language adaptation
+- `references/slide-structures.md` expanded to 16 structures with a selection table
+- `examples/` — three worked decks: status report, investor update, training
+- Reference index and examples table in README
+
 ## Planned
-
-### v1.1 — Reference Depth
-
-- Design guide split into its own reference
-- Chinese-language adaptation guide
-- Worked example decks under `examples/`
-- Reference index in README
 
 ### v1.2 — Format Outputs
 
