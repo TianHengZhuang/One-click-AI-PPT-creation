@@ -132,6 +132,98 @@ Pick the closest structure, then adapt slide count to the time limit (roughly on
 7. Consolidation — what we decided
 8. Next actions — owners and due dates
 
+## 11. Investor update (7 slides)
+
+1. Headline — the one number and the one decision the update exists for
+2. Metrics — the dashboard, same metrics every period
+3. What worked — two or three specific wins
+4. What did not — stated plainly, with the response
+5. Asks — where the board or investor can help
+6. Cash and runway — the unemotional version
+7. What happens next — the next milestone and its date
+
+## 12. Quarterly business review (10 slides)
+
+1. Quarter in one line — result against target
+2. Scorecard — every committed metric, target vs. actual
+3. Revenue and cost drivers
+4. Customer story — one account, start to result
+5. What over-performed and why
+6. What under-performed and why
+7. Risks entering next quarter
+8. Decisions needed now
+9. Next quarter commitments
+10. Ask / open discussion
+
+## 13. Client proposal (10 slides)
+
+1. Their situation — restate the problem in their words
+2. The cost of inaction — quantified
+3. Our approach — three phases, one line each
+4. Scope — what is included, what is not
+5. Timeline — milestones and dependencies
+6. Proof — closest comparable engagement
+7. Team — who does what, named
+8. Commercials — options, not a single price
+9. Risks and how we handle them
+10. Next step — the specific action and date
+
+## 14. Technical design review (10 slides)
+
+1. Problem statement and constraints
+2. Requirements — functional and non-functional
+3. Options considered — with the trade-off table
+4. Chosen design — one diagram, top level
+5. Data model and interfaces
+6. Failure modes and mitigation
+7. Security and privacy considerations
+8. Migration and rollout plan
+9. Open questions for reviewers
+10. Decision requested
+
+## 15. Post-mortem (8 slides)
+
+1. What happened — timeline of facts only
+2. Impact — users, money, duration
+3. Detection — how it was found, how long it took
+4. Root cause — the mechanism, not the person
+5. What went well in the response
+6. What went badly
+7. Action items with owners and dates
+8. What we will verify next time
+
+## 16. All-hands update (8 slides)
+
+1. Where we are — one line on the state of the business
+2. The numbers everyone should know
+3. What changed since last time
+4. Customer moment — one story from the field
+5. Team recognition — specific, short
+6. What we are betting on next
+7. How it affects you — what changes for each team
+8. Questions
+
+## Choosing a structure
+
+| If the deck is about | Use |
+|----------------------|-----|
+| Raising money from a new investor | 1 Business pitch |
+| Reporting progress upward | 2 Status report |
+| Explaining a concept to learners | 3 Training / explainer |
+| Defending an analysis | 4 Data-heavy report |
+| Responding to a formal requirement | 5 Proposal / RFP response |
+| Announcing something new | 6 Product launch |
+| Reviewing twelve months | 7 Annual review |
+| Teaching a class | 8 Course lecture |
+| Showing what a customer achieved | 9 Case study |
+| Running a working session | 10 Workshop |
+| Updating existing investors | 11 Investor update |
+| Reviewing one quarter | 12 Quarterly business review |
+| Winning one client | 13 Client proposal |
+| Getting a design approved | 14 Technical design review |
+| Explaining a failure | 15 Post-mortem |
+| Updating the whole company | 16 All-hands update |
+
 ## Rules of thumb
 
 - One slide per major message. If a slide needs more than five bullets, split it.
