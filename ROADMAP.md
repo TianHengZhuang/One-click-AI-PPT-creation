@@ -20,12 +20,14 @@ One-Click AI PPT evolution plan.
 - `examples/` — three worked decks: status report, investor update, training
 - Reference index and examples table in README
 
+### v1.2.0 — Format Outputs (2026-09-11)
+
+- `references/output-contract.md` — optional structured output (JSON/YAML) with `meta` + `slides`
+- Speaker-note timing model (130 wpm English / 240 chars per min Chinese, +8s slide overhead)
+- `examples/status-report.json` — worked structured payload
+- SKILL Step 5 routes machine-readable requests through the contract
+
 ## Planned
-
-### v1.2 — Format Outputs
-
-- Optional structured output contract (JSON / YAML) for downstream rendering
-- Speaker-note timing model (words per minute per slide)
 
 ### v1.3 — Rendering Handoff
 

@@ -2,6 +2,18 @@
 
 All notable changes to One-Click AI PPT.
 
+## [v1.2.0] - 2026-09-11
+
+### Added
+
+- `references/output-contract.md` — optional JSON/YAML schema (`meta` + `slides`), validation checklist, and speaker-note timing model (130 wpm en / 240 chars per min zh-CN, +8s per slide)
+- `examples/status-report.json` — structured payload for the existing status-report deck
+
+### Changed
+
+- `SKILL.md` — Step 5 now routes structured/rendering requests through the output contract; examples section lists the JSON sample
+- `README.md` — structure tree, reference index, and examples table include the contract and JSON sample
+
 ## [v1.1.0] - 2026-09-11
 
 ### Added

@@ -125,9 +125,11 @@ repository-root/
 │   ├── slide-structures.md        # 16 deck structures by purpose
 │   ├── copywriting-guide.md       # copy rules and examples
 │   ├── design-guide.md            # layout, type scale, colour, charts
-│   └── zh-cn-adaptation.md        # Chinese-language adaptation
+│   ├── zh-cn-adaptation.md        # Chinese-language adaptation
+│   └── output-contract.md         # optional JSON/YAML deck payload
 └── examples/
     ├── status-report.md
+    ├── status-report.json         # same deck as structured payload
     ├── investor-update.md
     └── training.md
 ```
@@ -140,12 +142,14 @@ repository-root/
 | `references/copywriting-guide.md` | Writing or fixing slide copy |
 | `references/design-guide.md` | Building the deck into slides |
 | `references/zh-cn-adaptation.md` | The deck is in Chinese |
+| `references/output-contract.md` | The user wants JSON/YAML or a rendering payload |
 
 ## Examples
 
 | Example | Structure |
 |---------|-----------|
 | [status-report.md](examples/status-report.md) | Status report — Q3 platform migration |
+| [status-report.json](examples/status-report.json) | Same deck as a structured JSON payload |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
 

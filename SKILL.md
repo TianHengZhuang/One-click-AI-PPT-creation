@@ -57,7 +57,9 @@ Notes: ...
 ...
 ```
 
-If the user wants a different format (table, JSON, plain text), follow their request.
+If the user wants a different format (table, plain text), follow their request.
+
+If the user asks for JSON, YAML, a machine-readable outline, or a payload for a rendering script, emit the structured contract in `references/output-contract.md`. Keep the same slide content as the Markdown form; add `est_seconds` per slide using that file's timing model, and put the roll-up in `meta.est_minutes`. A worked sample is `examples/status-report.json`.
 
 ## Copywriting rules
 
@@ -91,3 +93,4 @@ Write in the language the user asks for. When the output is Chinese, also apply 
 ## Examples
 
 Worked decks live in examples/: examples/status-report.md, examples/investor-update.md, examples/training.md.
+Structured payload sample: examples/status-report.json.

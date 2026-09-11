@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "meta": {
+    "title": "Q3 Platform Migration — Status Report",
+    "audience": "VP Engineering and peer leads",
+    "purpose": "report",
+    "language": "en",
+    "target_minutes": 8,
+    "slide_count": 8,
+    "est_minutes": 4.8,
+    "structure_id": "status-report"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "title": "Migration is 70% complete and on the original schedule",
+      "bullets": [
+        "14 of 20 services cut over",
+        "Zero customer-visible incidents this quarter",
+        "The remaining 6 services carry 80% of traffic"
+      ],
+      "visual": "progress bar with all 20 services marked, the last 6 in a contrasting colour",
+      "speaker_notes": "We are at 70% with no customer impact. The remaining six services carry most of our traffic, so the last third is where the risk lives.",
+      "est_seconds": 36
+    },
+    {
+      "id": 2,
+      "title": "Wins since the last report",
+      "bullets": [
+        "Cut-over runbook reduced average migration time from 6 hours to 90 minutes",
+        "Two teams that were blocked on tooling are now self-serving",
+        "Rollback was exercised twice in production, both clean"
+      ],
+      "visual": "before/after timeline of a single cut-over",
+      "speaker_notes": "The runbook change is the reason we caught up. Rollback has been tested for real, not on paper.",
+      "est_seconds": 40
+    },
+    {
+      "id": 3,
+      "title": "Metrics dashboard",
+      "bullets": [
+        "Availability 99.97% against a 99.95% target",
+        "p95 latency down 12% after the second cut-over",
+        "Error budget consumed: 41% of the quarter"
+      ],
+      "visual": "three-metric dashboard row",
+      "speaker_notes": "Latency improved as a side effect of the new routing layer. Error budget is comfortable.",
+      "est_seconds": 38
+    },
+    {
+      "id": 4,
+      "title": "Two issues are open",
+      "bullets": [
+        "Service 15 has a schema dependency we cannot cut over until the billing team ships",
+        "On-call load is up 30% during cut-over weekends"
+      ],
+      "visual": "table of the two issues with owner and age",
+      "speaker_notes": "Neither issue threatens the schedule yet. The billing dependency is the one to watch.",
+      "est_seconds": 36
+    },
+    {
+      "id": 5,
+      "title": "The billing dependency is the schedule risk",
+      "bullets": [
+        "Billing ships on 15 October, three weeks before our cut-over window",
+        "No buffer if that slips",
+        "Alternative path exists but costs two extra weeks of dual-write"
+      ],
+      "visual": "dependency timeline with the two paths",
+      "speaker_notes": "If billing slips past 15 October, we choose between missing the quarter or paying for the dual-write path.",
+      "est_seconds": 40
+    },
+    {
+      "id": 6,
+      "title": "Two decisions are needed today",
+      "bullets": [
+        "Accept the 15 October dependency as the plan of record",
+        "Pre-approve the dual-write fallback budget"
+      ],
+      "visual": "two decision cards with the owner of each",
+      "speaker_notes": "These are the only two things I need from this room.",
+      "est_seconds": 28
+    },
+    {
+      "id": 7,
+      "title": "Next steps",
+      "bullets": [
+        "Services 15-17 scheduled for weeks 1-3 of October",
+        "Load tests for the remaining six run in parallel",
+        "Weekly risk review with the billing lead starts Friday"
+      ],
+      "visual": "three-lane schedule through the end of the quarter",
+      "speaker_notes": "The last three services are the ones that need the most rehearsal.",
+      "est_seconds": 38
+    },
+    {
+      "id": 8,
+      "title": "Questions",
+      "bullets": [
+        "Risks I have not listed",
+        "Constraints from your teams"
+      ],
+      "visual": "none",
+      "speaker_notes": "Open floor. I would rather hear the objection now than in November.",
+      "est_seconds": 30
+    }
+  ]
+}
