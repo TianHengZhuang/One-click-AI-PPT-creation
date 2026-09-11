@@ -115,11 +115,39 @@ Notes: "Here's what we need: $6M to scale sales and engineering. We're closing t
 
 ```text
 repository-root/
-├── SKILL.md                    # main instructions
-└── references/
-    ├── slide-structures.md     # deck structures by purpose
-    └── copywriting-guide.md    # copy rules and examples
+├── SKILL.md                       # main instructions
+├── README.md
+├── CHANGELOG.md
+├── ROADMAP.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+├── references/
+│   ├── slide-structures.md        # 16 deck structures by purpose
+│   ├── copywriting-guide.md       # copy rules and examples
+│   ├── design-guide.md            # layout, type scale, colour, charts
+│   └── zh-cn-adaptation.md        # Chinese-language adaptation
+└── examples/
+    ├── status-report.md
+    ├── investor-update.md
+    └── training.md
 ```
+
+## Reference files
+
+| File | Load it when |
+|------|--------------|
+| `references/slide-structures.md` | Choosing a deck structure |
+| `references/copywriting-guide.md` | Writing or fixing slide copy |
+| `references/design-guide.md` | Building the deck into slides |
+| `references/zh-cn-adaptation.md` | The deck is in Chinese |
+
+## Examples
+
+| Example | Structure |
+|---------|-----------|
+| [status-report.md](examples/status-report.md) | Status report — Q3 platform migration |
+| [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
+| [training.md](examples/training.md) | Training — expense policy |
 
 ## License
 

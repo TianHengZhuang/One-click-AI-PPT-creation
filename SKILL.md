@@ -21,7 +21,7 @@ Ask for: target audience, time limit (5/10/20 min), desired number of slides (de
 
 ### Step 2 — Pick a structure
 
-Choose from references/slide-structures.md. Default: the 10-slide Business Pitch. Match the structure to the purpose:
+Choose from the 16 structures in references/slide-structures.md, or use its "Choosing a structure" table. Default: the 10-slide Business Pitch. Match the structure to the purpose:
 
 - Pitch / proposal → Problem → Solution → Market → Traction → Ask
 - Status report → Wins → Metrics → Issues → Next steps
@@ -75,9 +75,19 @@ If the user wants a different format (table, JSON, plain text), follow their req
 - 24pt+ body text, 36pt+ headlines.
 - Use one accent color for calls-to-action and key numbers.
 - Charts beat tables; tables beat paragraphs.
+- See references/design-guide.md for layout, type scale, colour and chart selection.
+
+## Language
+
+Write in the language the user asks for. When the output is Chinese, also apply references/zh-cn-adaptation.md: larger type, full-width punctuation, conclusion-first headlines, no four-character filler.
 
 ## Edge cases
 
 - Topic is vague ("something about marketing"): propose 3 concrete angles and let the user pick.
-- User wants another language: write in that language, keep the same structure.
+- User wants another language: write in that language, keep the same structure. For Chinese, apply references/zh-cn-adaptation.md.
+- User brings an existing deck to fix: audit it against the copywriting rules and return a corrected outline, keeping their own content.
 - User wants a real .pptx file: provide the full outline plus slide text in a format they can paste into PowerPoint/Keynote/Google Slides, and offer the structure for a rendering script.
+
+## Examples
+
+Worked decks live in examples/: examples/status-report.md, examples/investor-update.md, examples/training.md.
