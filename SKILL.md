@@ -98,3 +98,5 @@ Write in the language the user asks for. When the output is Chinese, also apply 
 
 Worked decks live in examples/: examples/status-report.md, examples/investor-update.md, examples/training.md.
 Structured payload sample: examples/status-report.json.
+Offline HTML sample: examples/status-report.html.
+Rehearsal talk track sample: examples/status-report-notes.md.

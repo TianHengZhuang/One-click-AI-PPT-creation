@@ -2,6 +2,12 @@
 
 All notable changes to One-Click AI PPT.
 
+## [v1.4.1] - 2026-09-12
+
+### Fixed
+
+- `SKILL.md` Examples section listed only Markdown + JSON samples after v1.3/v1.4 added HTML and rehearsal notes. Now lists all four status-report artifacts.
+
 ## [v1.4.0] - 2026-09-12
 
 ### Added
