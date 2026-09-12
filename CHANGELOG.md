@@ -2,6 +2,18 @@
 
 All notable changes to One-Click AI PPT.
 
+## [v1.4.0] - 2026-09-12
+
+### Added
+
+- `references/rehearsal-notes.md` — speaker-only notes pack convention (say / watch-for, timing, pack layout)
+- `examples/status-report-notes.md` — status-report talk track aligned with the existing deck
+
+### Changed
+
+- `SKILL.md` — Step 5 routes rehearsal / speaker-only requests through the notes pack
+- `README.md` — structure tree, reference index, examples table
+
 ## [v1.3.0] - 2026-09-12
 
 ### Added

@@ -63,6 +63,8 @@ If the user asks for JSON, YAML, a machine-readable outline, or a payload for a 
 
 If the user asks for an offline presentable file, emit a single-file HTML deck per `references/html-export.md`. Before any export, run `references/export-checklist.md` and report hard-gate failures.
 
+If the user asks for a rehearsal script, speaker-only notes, or a talk track, emit `references/rehearsal-notes.md` (expand JSON `notes` into speakable paragraphs; do not invent a second storyline). Worked sample: `examples/status-report-notes.md`.
+
 ## Copywriting rules
 
 - Write in active voice. "We cut onboarding time by 40%", not "Onboarding time was reduced".
