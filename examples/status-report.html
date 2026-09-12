@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Q3 Platform Migration — Status Report</title>
+  <style>
+    :root {
+      --bg: #f7f7f5;
+      --ink: #1a1a1a;
+      --muted: #5c5c5c;
+      --accent: #1f6feb;
+      --line: #d8d8d4;
+      --slide-max: 1100px;
+      --pad: 48px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .slide {
+      min-height: 100vh;
+      max-width: var(--slide-max);
+      margin: 0 auto;
+      padding: var(--pad);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .slide h1 { font-size: 2.4rem; margin: 0 0 1rem; line-height: 1.2; }
+    .slide h2 { font-size: 1.1rem; color: var(--muted); font-weight: 500; margin: 0 0 1.5rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .slide ul { margin: 0; padding-left: 1.2rem; font-size: 1.35rem; line-height: 1.55; }
+    .slide li { margin: 0.45rem 0; }
+    .kpi { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 0; }
+    .kpi div {
+      flex: 1 1 160px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      background: #fff;
+    }
+    .kpi strong { display: block; font-size: 1.8rem; color: var(--accent); }
+    .kpi span { color: var(--muted); font-size: 0.95rem; }
+    .notes {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--accent);
+      color: var(--muted);
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+    body.show-notes .notes { display: block; }
+    .hint { position: fixed; right: 12px; bottom: 10px; color: var(--muted); font-size: 0.75rem; }
+    @media print {
+      .slide { min-height: auto; page-break-after: always; border: 0; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide" data-notes="Open with the one-line status: migration is on plan for Q3 exit. Hold questions until risks.">
+      <h2>Status report</h2>
+      <h1>Q3 platform migration is on plan</h1>
+      <ul>
+        <li>72% of services on the new runtime</li>
+        <li>Zero P1 incidents in the last 30 days</li>
+        <li>Two teams need a cutover window in October</li>
+      </ul>
+      <div class="kpi">
+        <div><strong>72%</strong><span>services migrated</span></div>
+        <div><strong>0</strong><span>P1 / 30 days</span></div>
+        <div><strong>14d</strong><span>to next gate</span></div>
+      </div>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="Walk left to right. Do not read every bar. Call out only the two lagging domains.">
+      <h2>Where we are</h2>
+      <h1>Core domains ahead; data plane behind</h1>
+      <ul>
+        <li>API gateway and auth: complete</li>
+        <li>Worker fleet: 84%</li>
+        <li>Data plane: 51% — blocked on dual-write soak</li>
+      </ul>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="This is the ask slide. Name owners if present. Keep under two minutes.">
+      <h2>Decisions needed</h2>
+      <h1>Two asks this week</h1>
+      <ul>
+        <li>Approve Oct 12 cutover window for billing workers</li>
+        <li>Fund one extra week of dual-write soak for search</li>
+      </ul>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="Close on the exit criterion. Offer offline HTML pack link after the meeting.">
+      <h2>Next 14 days</h2>
+      <h1>Exit criterion for the October gate</h1>
+      <ul>
+        <li>All P0 services green on new runtime for 7 consecutive days</li>
+        <li>Rollback drill completed once per remaining domain</li>
+        <li>Search dual-write error rate &lt; 0.1%</li>
+      </ul>
+      <div class="notes"></div>
+    </section>
+  </main>
+  <div class="hint">→ next · ← prev · n notes</div>
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let i = 0;
+    function show(n) {
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      slides[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.notes').forEach((el, idx) => {
+        el.textContent = idx === i ? (slides[idx].dataset.notes || '') : '';
+      });
+    }
+    addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); show(i + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); }
+      if (e.key === 'Home') show(0);
+      if (e.key === 'End') show(slides.length - 1);
+      if (e.key === 'n' || e.key === 'N') document.body.classList.toggle('show-notes');
+    });
+    show(0);
+  </script>
+</body>
+</html>

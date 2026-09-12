@@ -2,6 +2,19 @@
 
 All notable changes to One-Click AI PPT.
 
+## [v1.3.0] - 2026-09-12
+
+### Added
+
+- `references/export-checklist.md` — hard/soft gates before hand-off: slide count, type size, contrast, chart labels, speaker-note budget, deliverable pack
+- `references/html-export.md` — single-file offline HTML deck convention (tokens, keyboard nav, print, a11y)
+- `examples/status-report.html` — status-report deck as a presentable HTML file
+
+### Changed
+
+- `SKILL.md` — Step 5 routes offline HTML requests and requires the export checklist before hand-off
+- `README.md` — structure tree, reference index, examples table
+
 ## [v1.2.0] - 2026-09-11
 
 ### Added

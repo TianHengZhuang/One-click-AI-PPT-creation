@@ -126,10 +126,13 @@ repository-root/
 │   ├── copywriting-guide.md       # copy rules and examples
 │   ├── design-guide.md            # layout, type scale, colour, charts
 │   ├── zh-cn-adaptation.md        # Chinese-language adaptation
-│   └── output-contract.md         # optional JSON/YAML deck payload
+│   ├── output-contract.md         # optional JSON/YAML deck payload
+│   ├── export-checklist.md        # pre-export hard/soft gates
+│   └── html-export.md             # single-file HTML deck convention
 └── examples/
     ├── status-report.md
     ├── status-report.json         # same deck as structured payload
+    ├── status-report.html         # same deck as offline HTML
     ├── investor-update.md
     └── training.md
 ```
@@ -143,6 +146,8 @@ repository-root/
 | `references/design-guide.md` | Building the deck into slides |
 | `references/zh-cn-adaptation.md` | The deck is in Chinese |
 | `references/output-contract.md` | The user wants JSON/YAML or a rendering payload |
+| `references/export-checklist.md` | Before any hand-off or render |
+| `references/html-export.md` | The user wants a single-file HTML deck |
 
 ## Examples
 
@@ -150,6 +155,7 @@ repository-root/
 |---------|-----------|
 | [status-report.md](examples/status-report.md) | Status report — Q3 platform migration |
 | [status-report.json](examples/status-report.json) | Same deck as a structured JSON payload |
+| [status-report.html](examples/status-report.html) | Same deck as an offline HTML presentation |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
 
