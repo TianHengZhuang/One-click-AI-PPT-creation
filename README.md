@@ -153,6 +153,12 @@ repository-root/
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
 
+## Related projects
+
+- [mavplan](https://github.com/TianHengZhuang/mavplan) — UAV mission planning & training CLI
+- [mavplan-web](https://github.com/TianHengZhuang/mavplan-web) — browser console for mavplan
+- [Chinese-WebNovel-Master](https://github.com/TianHengZhuang/Chinese-WebNovel-Master) — Chinese web-fiction agent workflow
+
 ## License
 
 MIT
