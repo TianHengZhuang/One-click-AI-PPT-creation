@@ -32,7 +32,7 @@
       border-bottom: 1px solid var(--line);
     }
     .slide h1 { font-size: 2.4rem; margin: 0 0 1rem; line-height: 1.2; }
-    .slide h2 { font-size: 1.1rem; color: var(--muted); font-weight: 500; margin: 0 0 1.5rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .slide .eyebrow { font-size: 1.1rem; color: var(--muted); font-weight: 500; margin: 0 0 1.5rem; letter-spacing: 0.04em; text-transform: uppercase; }
     .slide ul { margin: 0; padding-left: 1.2rem; font-size: 1.35rem; line-height: 1.55; }
     .slide li { margin: 0.45rem 0; }
     .kpi { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0 0; }
@@ -64,50 +64,98 @@
 </head>
 <body>
   <main class="deck">
-    <section class="slide" data-notes="Open with the one-line status: migration is on plan for Q3 exit. Hold questions until risks.">
-      <h2>Status report</h2>
-      <h1>Q3 platform migration is on plan</h1>
+
+    <section class="slide" data-notes="We are at 70% with no customer impact. The remaining six services carry most of our traffic, so the last third is where the risk lives.">
+      <p class="eyebrow">Status</p>
+      <h1>Migration is 70% complete and on the original schedule</h1>
       <ul>
-        <li>72% of services on the new runtime</li>
-        <li>Zero P1 incidents in the last 30 days</li>
-        <li>Two teams need a cutover window in October</li>
+        <li>14 of 20 services cut over</li>
+        <li>Zero customer-visible incidents this quarter</li>
+        <li>The remaining 6 services carry 80% of traffic</li>
       </ul>
       <div class="kpi">
-        <div><strong>72%</strong><span>services migrated</span></div>
-        <div><strong>0</strong><span>P1 / 30 days</span></div>
-        <div><strong>14d</strong><span>to next gate</span></div>
+        <div><strong>70%</strong><span>services migrated</span></div>
+        <div><strong>0</strong><span>customer-visible incidents</span></div>
+        <div><strong>14 / 20</strong><span>services cut over</span></div>
       </div>
       <div class="notes"></div>
     </section>
 
-    <section class="slide" data-notes="Walk left to right. Do not read every bar. Call out only the two lagging domains.">
-      <h2>Where we are</h2>
-      <h1>Core domains ahead; data plane behind</h1>
+    <section class="slide" data-notes="The runbook change is the reason we caught up. Rollback has been tested for real, not on paper.">
+      <p class="eyebrow">Wins</p>
+      <h1>Wins since the last report</h1>
       <ul>
-        <li>API gateway and auth: complete</li>
-        <li>Worker fleet: 84%</li>
-        <li>Data plane: 51% — blocked on dual-write soak</li>
+        <li>Cut-over runbook reduced average migration time from 6 hours to 90 minutes</li>
+        <li>Two teams that were blocked on tooling are now self-serving</li>
+        <li>Rollback was exercised twice in production, both clean</li>
       </ul>
       <div class="notes"></div>
     </section>
 
-    <section class="slide" data-notes="This is the ask slide. Name owners if present. Keep under two minutes.">
-      <h2>Decisions needed</h2>
-      <h1>Two asks this week</h1>
+    <section class="slide" data-notes="Latency improved as a side effect of the new routing layer. Error budget is comfortable.">
+      <p class="eyebrow">Metrics</p>
+      <h1>Metrics dashboard</h1>
       <ul>
-        <li>Approve Oct 12 cutover window for billing workers</li>
-        <li>Fund one extra week of dual-write soak for search</li>
+        <li>Availability 99.97% against a 99.95% target</li>
+        <li>p95 latency down 12% after the second cut-over</li>
+        <li>Error budget consumed: 41% of the quarter</li>
+      </ul>
+      <div class="kpi">
+        <div><strong>99.97%</strong><span>availability (target 99.95%)</span></div>
+        <div><strong>−12%</strong><span>p95 latency after 2nd cut-over</span></div>
+        <div><strong>41%</strong><span>error budget consumed</span></div>
+      </div>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="Neither issue threatens the schedule yet. The billing dependency is the one to watch.">
+      <p class="eyebrow">Issues</p>
+      <h1>Two issues are open</h1>
+      <ul>
+        <li>Service 15 has a schema dependency we cannot cut over until the billing team ships</li>
+        <li>On-call load is up 30% during cut-over weekends</li>
       </ul>
       <div class="notes"></div>
     </section>
 
-    <section class="slide" data-notes="Close on the exit criterion. Offer offline HTML pack link after the meeting.">
-      <h2>Next 14 days</h2>
-      <h1>Exit criterion for the October gate</h1>
+    <section class="slide" data-notes="If billing slips past 15 October, we choose between missing the quarter or paying for the dual-write path.">
+      <p class="eyebrow">Risk</p>
+      <h1>The billing dependency is the schedule risk</h1>
       <ul>
-        <li>All P0 services green on new runtime for 7 consecutive days</li>
-        <li>Rollback drill completed once per remaining domain</li>
-        <li>Search dual-write error rate &lt; 0.1%</li>
+        <li>Billing ships on 15 October, three weeks before our cut-over window</li>
+        <li>No buffer if that slips</li>
+        <li>Alternative path exists but costs two extra weeks of dual-write</li>
+      </ul>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="These are the only two things I need from this room.">
+      <p class="eyebrow">Decisions</p>
+      <h1>Two decisions are needed today</h1>
+      <ul>
+        <li>Accept the 15 October dependency as the plan of record</li>
+        <li>Pre-approve the dual-write fallback budget</li>
+      </ul>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="The last three services are the ones that need the most rehearsal.">
+      <p class="eyebrow">Next steps</p>
+      <h1>Next steps</h1>
+      <ul>
+        <li>Services 15-17 scheduled for weeks 1-3 of October</li>
+        <li>Load tests for the remaining six run in parallel</li>
+        <li>Weekly risk review with the billing lead starts Friday</li>
+      </ul>
+      <div class="notes"></div>
+    </section>
+
+    <section class="slide" data-notes="Open floor. I would rather hear the objection now than in November.">
+      <p class="eyebrow">Q&amp;A</p>
+      <h1>Questions</h1>
+      <ul>
+        <li>Risks I have not listed</li>
+        <li>Constraints from your teams</li>
       </ul>
       <div class="notes"></div>
     </section>
