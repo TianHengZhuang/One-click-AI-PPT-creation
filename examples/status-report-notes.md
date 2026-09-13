@@ -1,6 +1,6 @@
 # Q3 Platform Migration — Status Report — rehearsal notes
 
-Slot: 8 min · Slides: 8 · Language: en
+Slot: 5 min · Slides: 8 · Language: en
 
 ## Slide 1 — Migration is 70% complete and on the original schedule
 

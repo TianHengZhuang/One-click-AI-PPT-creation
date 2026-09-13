@@ -2,6 +2,19 @@
 
 All notable changes to One-Click AI PPT.
 
+## [v1.4.2] - 2026-09-13
+
+### Added
+
+- `tools/deck_lint.py` — optional, standard-library-only checker for a multi-artifact deck pack: slide counts, headlines, timing math, note budgets and repeated numeric claims are cross-checked across the Markdown, JSON, notes and HTML copies; hard gates and soft warnings are reported separately and the exit code is CI-friendly
+- `README.md` — structure tree and a "Validate a deck pack" section
+- `SKILL.md` — Step 5 runs the lint before hand-off when a pack ships as more than one artifact
+- `references/export-checklist.md` — the deliverable pack section names the lint run
+
+### Fixed
+
+- `examples/status-report.json` — `meta.target_minutes` was 8 while the notes budget rolls up to 4.8 minutes; now 5, with the Markdown request line and the notes header following
+
 ## [v1.4.1] - 2026-09-12
 
 ### Fixed

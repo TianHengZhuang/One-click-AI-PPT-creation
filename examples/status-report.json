@@ -5,7 +5,7 @@
     "audience": "VP Engineering and peer leads",
     "purpose": "report",
     "language": "en",
-    "target_minutes": 8,
+    "target_minutes": 5,
     "slide_count": 8,
     "est_minutes": 4.8,
     "structure_id": "status-report"

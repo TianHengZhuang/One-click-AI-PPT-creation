@@ -67,6 +67,8 @@ Before export, name the pack:
   notes.md            # optional, notes only for rehearsal
 ```
 
+Once the pack exists on disk, `python tools/deck_lint.py <deck-path>` re-checks the copies against each other and against `references/output-contract.md`. Hard-gate failures block the hand-off; soft warnings are reported, not enforced.
+
 ---
 
 ## Output

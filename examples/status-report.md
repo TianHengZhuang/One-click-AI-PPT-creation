@@ -1,6 +1,6 @@
 # Worked example — Status report
 
-Request: "Create a status report deck for the Q3 platform migration. Audience: VP Engineering and peer leads. 8 slides, about 8 minutes."
+Request: "Create a status report deck for the Q3 platform migration. Audience: VP Engineering and peer leads. 8 slides, about 5 minutes."
 
 Structure used: 2. Status report.
 

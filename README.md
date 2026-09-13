@@ -6,7 +6,7 @@ Turn a bare topic into a complete business deck — outline, slide text, and spe
 
 One-Click PPT is a small Agent Skill that turns a topic into a presentation-ready deck: a structured outline, per-slide headlines, bullets, visual suggestions, and speaker notes. It works in clients that support the Agent Skills format, including Claude Code, Cursor, Codex, and Gemini CLI.
 
-No API keys, scripts, or dependencies are required. The repository contains a `SKILL.md` file and supporting reference docs.
+No API keys or dependencies are required. The repository contains a `SKILL.md` file, supporting reference docs, and one optional helper script — `tools/deck_lint.py` — that cross-checks a multi-artifact deck pack.
 
 It produces a slide-by-slide script; it does not create a `.pptx` file.
 
@@ -130,6 +130,8 @@ repository-root/
 │   ├── export-checklist.md        # pre-export hard/soft gates
 │   ├── html-export.md             # single-file HTML deck convention
 │   └── rehearsal-notes.md         # speaker-only notes pack
+├── tools/
+│   └── deck_lint.py               # pack consistency checker (optional)
 └── examples/
     ├── status-report.md
     ├── status-report.json         # same deck as structured payload
@@ -162,6 +164,17 @@ repository-root/
 | [status-report-notes.md](examples/status-report-notes.md) | Same deck as a rehearsal talk track |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
+
+## Validate a deck pack (optional)
+
+When the same deck ships as more than one artifact — Markdown plus a JSON payload, a rehearsal notes pack, an offline HTML file — the copies drift as soon as one of them is edited alone. `tools/deck_lint.py` reads the pack and cross-checks the copies against the JSON payload and `references/output-contract.md`:
+
+```bash
+python tools/deck_lint.py examples/status-report
+python tools/deck_lint.py examples/status-report --strict   # warnings fail too
+```
+
+It checks slide counts, headline wording, timing math, per-slide note budgets and the numeric claims each copy repeats, then reports hard-gate errors and soft warnings. The exit code is 1 on failure, so it drops straight into CI. Standard library only, no install step.
 
 ## Related projects
 

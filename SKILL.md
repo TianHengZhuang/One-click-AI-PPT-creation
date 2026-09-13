@@ -65,6 +65,8 @@ If the user asks for an offline presentable file, emit a single-file HTML deck p
 
 If the user asks for a rehearsal script, speaker-only notes, or a talk track, emit `references/rehearsal-notes.md` (expand JSON `notes` into speakable paragraphs; do not invent a second storyline). Worked sample: `examples/status-report-notes.md`.
 
+If the pack ships as more than one artifact (Markdown plus JSON, notes and/or HTML), run `python tools/deck_lint.py <deck-path>` before hand-off. It cross-checks slide counts, headlines, timing and numbered claims across the copies and reports hard-gate failures and soft warnings. Worked sample: `python tools/deck_lint.py examples/status-report`.
+
 ## Copywriting rules
 
 - Write in active voice. "We cut onboarding time by 40%", not "Onboarding time was reduced".
@@ -100,3 +102,4 @@ Worked decks live in examples/: examples/status-report.md, examples/investor-upd
 Structured payload sample: examples/status-report.json.
 Offline HTML sample: examples/status-report.html.
 Rehearsal talk track sample: examples/status-report-notes.md.
+Pack checker: tools/deck_lint.py (optional, standard library only).
