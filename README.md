@@ -129,7 +129,7 @@ repository-root/
 │   ├── output-contract.md         # optional JSON/YAML deck payload
 │   ├── export-checklist.md        # pre-export hard/soft gates
 │   ├── html-export.md             # single-file HTML deck convention
-│   └── rehearsal-notes.md         # speaker-only notes pack
+│   └── rehearsal-notes.md · executive-one-pager.md         # speaker-only notes pack
 ├── tools/
 │   └── deck_lint.py               # pack consistency checker (optional)
 └── examples/

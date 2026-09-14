@@ -2,6 +2,17 @@
 
 All notable changes to One-Click AI PPT.
 
+## [v1.5.0] - 2026-09-14
+
+### Added
+
+- references/executive-one-pager.md — one-page leave-behind spec (situation, key numbers, single ask, risks, next steps) with hard no-new-facts rule and quality gate
+- SKILL.md — Optional Step 6 routes one-pager / leave-behind requests after the deck is stable
+
+### Changed
+
+- README.md — reference index includes the one-pager guide
+
 ## [v1.4.2] - 2026-09-13
 
 ### Added

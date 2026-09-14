@@ -4,6 +4,11 @@ One-Click AI PPT evolution plan.
 
 ## Released
 
+### v1.5.0 — Executive One-Pager (2026-09-14)
+
+- references/executive-one-pager.md: leave-behind page contract synced to deck numbers
+- Optional SKILL Step 6 for sponsors who will not attend the talk
+
 ### v1.0.0 — Core Skill (2026-09-11)
 
 - Five-step workflow: clarify → structure → outline → write → format

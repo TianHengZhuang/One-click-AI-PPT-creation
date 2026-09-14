@@ -103,3 +103,13 @@ Structured payload sample: examples/status-report.json.
 Offline HTML sample: examples/status-report.html.
 Rehearsal talk track sample: examples/status-report-notes.md.
 Pack checker: tools/deck_lint.py (optional, standard library only).
+
+---
+
+# Optional Step 6 — Executive One-Pager
+
+When the user asks for a leave-behind, email summary, or one-pager **after** the deck is stable, follow `references/executive-one-pager.md`.
+
+- Do not invent numbers that are not in the deck  
+- Keep a single ask  
+- Match deck language  
