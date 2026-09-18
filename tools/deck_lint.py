@@ -66,7 +66,13 @@ META_TIME_TOLERANCE = 0.11      # |est_minutes - round(sum(est_seconds)/60, 1)|
 SLOT_DRIFT_WARN = 0.15          # contract: >15% drift between estimate and slot
 BULLET_MAX = 5                  # over the cap is worth a warning
                                 # (short decision / Q&A slides legitimately carry fewer)
+NOTES_MIN_CHARS = 40            # speaker_notes talk-track floor
+NOTES_MAX_CHARS = 480           # keep notes speakable in the slide slot
+NOTES_MIN_LINES = 2             # prefer 2–3 cue lines per slide
+NOTES_MIN_SECONDS = 20          # a real slide rarely speaks for <20s
 SAY_SECONDS_TOLERANCE = 1
+# Three-slot scale (minutes): same outline family may be rendered at these lengths.
+DURATION_SLOTS = (3, 8, 15)
 
 SLIDE_HEADING_RE = re.compile(r"^##\s+Slide\s+(\d+)\s*[\u2014\u2013-]\s*(.+?)\s*$", re.M)
 NOTES_HEADER_RE = re.compile(
@@ -270,10 +276,48 @@ def check_json_payload(payload, report: Report) -> dict | None:
                 art,
                 f"{where}.bullets has {len(bullets)} items, the cap is {BULLET_MAX}",
             )
-        if isinstance(slide.get("est_seconds"), int):
-            seconds.append(slide["est_seconds"])
-        elif "est_seconds" in slide:
+        notes = slide.get("speaker_notes")
+        if isinstance(notes, str):
+            stripped_notes = notes.strip()
+            if not stripped_notes:
+                report.error(
+                    "json-notes-empty",
+                    art,
+                    f"{where}.speaker_notes is empty — every slide needs talk-track notes",
+                )
+            else:
+                n_chars = len(stripped_notes)
+                n_bullets = len(stripped_notes.splitlines())
+                if n_chars < NOTES_MIN_CHARS:
+                    report.warn(
+                        "json-notes-short",
+                        art,
+                        f"{where}.speaker_notes has {n_chars} chars (< {NOTES_MIN_CHARS}); add cue points",
+                    )
+                if n_chars > NOTES_MAX_CHARS:
+                    report.warn(
+                        "json-notes-long",
+                        art,
+                        f"{where}.speaker_notes has {n_chars} chars (> {NOTES_MAX_CHARS}); trim for the slot",
+                    )
+                if n_bullets < NOTES_MIN_LINES:
+                    report.warn(
+                        "json-notes-few-lines",
+                        art,
+                        f"{where}.speaker_notes has {n_bullets} line(s); prefer 2–3 cue lines",
+                    )
+        elif "speaker_notes" in slide:
+            report.error("json-slide-type", art, f"{where}.speaker_notes must be a string")
+        if slide.get("est_seconds") is not None and not isinstance(slide.get("est_seconds"), int):
             report.error("json-slide-type", art, f"{where}.est_seconds must be an integer")
+        elif isinstance(slide.get("est_seconds"), int):
+            seconds.append(slide["est_seconds"])
+            if slide["est_seconds"] < NOTES_MIN_SECONDS:
+                report.warn(
+                    "json-est-seconds-low",
+                    art,
+                    f"{where}.est_seconds is {slide['est_seconds']} (< {NOTES_MIN_SECONDS})",
+                )
 
     if seconds and isinstance(meta.get("est_minutes"), (int, float)):
         derived = round(sum(seconds) / 60, 1)
@@ -291,6 +335,12 @@ def check_json_payload(payload, report: Report) -> dict | None:
                     "json-slot-drift",
                     art,
                     f"estimated {derived} min against a {slot} min slot ({drift:.0%} drift > 15%)",
+                )
+            if slot not in DURATION_SLOTS and slot not in (2, 4, 5, 10, 20, 30, 45, 60):
+                report.warn(
+                    "json-slot-uncommon",
+                    art,
+                    f"meta.target_minutes is {slot}; common teaching slots are {list(DURATION_SLOTS)}",
                 )
 
     return {"meta": meta, "slides": slides}

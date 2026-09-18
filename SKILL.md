@@ -63,6 +63,8 @@ If the user asks for JSON, YAML, a machine-readable outline, or a payload for a 
 
 If the user asks for an offline presentable file, emit a single-file HTML deck per `references/html-export.md`. Before any export, run `references/export-checklist.md` and report hard-gate failures.
 
+When the same talk must ship at **3 / 8 / 15 minutes**, follow `references/duration-scaling.md`: cut or add slides, keep one message per slide, and name exports `{slug}_{version}_{slot}min_{date}`. Run `tools/deck_lint.py` on each scaled pack.
+
 If the user asks for a rehearsal script, speaker-only notes, or a talk track, emit `references/rehearsal-notes.md` (expand JSON `notes` into speakable paragraphs; do not invent a second storyline). Worked sample: `examples/status-report-notes.md`.
 
 If the pack ships as more than one artifact (Markdown plus JSON, notes and/or HTML), run `python tools/deck_lint.py <deck-path>` before hand-off. It cross-checks slide counts, headlines, timing and numbered claims across the copies and reports hard-gate failures and soft warnings. Worked sample: `python tools/deck_lint.py examples/status-report`.

@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.0 (2026-09-18)
+
+### Added
+- deck_lint: speaker_notes hard/soft gates (empty is error; short/long/few-lines warn)
+- references/duration-scaling.md — 3 / 8 / 15 minute slide + notes budgets and export naming
+- SKILL.md routes duration scaling before multi-slot export
+
+
 ## v1.5.1 (2026-09-18)
 
 ### Added
