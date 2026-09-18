@@ -67,6 +67,26 @@ Before export, name the pack:
   notes.md            # optional, notes only for rehearsal
 ```
 
+### Export file naming
+
+When you write a hand-off artifact (HTML deck, PDF, or outline copy), use:
+
+```text
+{deck-slug}_{version}_{YYYYMMDD}.{ext}
+```
+
+Examples:
+
+- `q3-pipeline-review_v1.5.1_20260918.html`
+- `investor-update_v1.5.1_20260918.md`
+
+Rules:
+
+- `deck-slug` is lowercase kebab-case from the deck title (no spaces)
+- `version` is the **pack / skill version** you are shipping (e.g. `v1.5.1`), not the meeting date
+- `YYYYMMDD` is the **export date** (local calendar day)
+- Never overwrite a previous export with the same name; bump the date or add `-b`, `-c` for re-exports the same day
+
 Once the pack exists on disk, `python tools/deck_lint.py <deck-path>` re-checks the copies against each other and against `references/output-contract.md`. Hard-gate failures block the hand-off; soft warnings are reported, not enforced.
 
 ---

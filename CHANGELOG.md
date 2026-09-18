@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.1 (2026-09-18)
+
+### Added
+- Export checklist: deliverable file naming {deck-slug}_{version}_{YYYYMMDD}.{ext} so re-exports never overwrite silently
+
+
 All notable changes to One-Click AI PPT.
 
 ## [v1.5.0] - 2026-09-14
