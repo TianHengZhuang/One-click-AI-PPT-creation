@@ -69,6 +69,8 @@ If the user asks for a rehearsal script, speaker-only notes, or a talk track, em
 
 If the pack ships as more than one artifact (Markdown plus JSON, notes and/or HTML), run `python tools/deck_lint.py <deck-path>` before hand-off. It cross-checks slide counts, headlines, timing and numbered claims across the copies and reports hard-gate failures and soft warnings. Worked sample: `python tools/deck_lint.py examples/status-report`.
 
+If the user asks for a real `.pptx` file, follow `references/rendering-handoff.md`: emit the structured payload first, lint the pack, then run `python tools/render_pptx.py <payload>.json`. Add `--template <corporate>.potx --master-map <map>.json` to land the deck in a corporate slide master (see `references/master-mapping.md`), and `--check` to resolve every layout without writing a file. The renderer needs `python-pptx`; if it cannot be installed, hand over the Markdown deck plus the payload instead.
+
 ## Copywriting rules
 
 - Write in active voice. "We cut onboarding time by 40%", not "Onboarding time was reduced".
@@ -105,6 +107,8 @@ Structured payload sample: examples/status-report.json.
 Offline HTML sample: examples/status-report.html.
 Rehearsal talk track sample: examples/status-report-notes.md.
 Pack checker: tools/deck_lint.py (optional, standard library only).
+Renderer (optional, needs python-pptx): tools/render_pptx.py — payload to .pptx, with corporate master mapping.
+Master map sample: examples/master-map.example.json.
 
 ---
 

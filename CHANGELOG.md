@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.7.0 (2026-09-22)
+
+### Added
+- `tools/render_pptx.py` — renders an output-contract payload to a `.pptx`, into the bundled Office master or a corporate template (`--template` + `--master-map`); `--check` resolves every layout without writing a file, `--json` prints the resolution report
+- `references/rendering-handoff.md` — render workflow, inputs and outputs, file naming, `python-pptx` dependency and troubleshooting
+- `references/master-mapping.md` — corporate master layout/placeholder mapping, name → keyword → index resolution order, localization notes
+- `examples/master-map.example.json` — worked master map for the bundled master
+
+### Changed
+- SKILL.md — Step 5 routes `.pptx` requests through the renderer; the edge-case list and reference index updated
+- README.md — structure tree, reference table and a "Render to .pptx" section
+
+
 ## v1.6.0 (2026-09-18)
 
 ### Added

@@ -4,6 +4,13 @@ One-Click AI PPT evolution plan.
 
 ## Released
 
+### v1.7.0 — Rendering Handoff (2026-09-22)
+
+- `tools/render_pptx.py` — renders an output-contract payload to a `.pptx`, into the bundled Office master or a corporate template
+- `references/rendering-handoff.md` — render workflow, inputs and outputs, file naming, dependency and troubleshooting
+- `references/master-mapping.md` — corporate master layout/placeholder mapping, resolution order, localization notes
+- `examples/master-map.example.json` — worked master map; `--check` resolves every layout without writing a file
+
 ### v1.5.0 — Executive One-Pager (2026-09-14)
 
 - references/executive-one-pager.md: leave-behind page contract synced to deck numbers
@@ -33,11 +40,6 @@ One-Click AI PPT evolution plan.
 - SKILL Step 5 routes machine-readable requests through the contract
 
 ## Planned
-
-### v1.3 — Rendering Handoff
-
-- Optional script template that turns the outline into a `.pptx`
-- Mapping to common corporate slide masters
 
 ### Long-Term
 

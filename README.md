@@ -6,9 +6,9 @@ Turn a bare topic into a complete business deck — outline, slide text, and spe
 
 One-Click PPT is a small Agent Skill that turns a topic into a presentation-ready deck: a structured outline, per-slide headlines, bullets, visual suggestions, and speaker notes. It works in clients that support the Agent Skills format, including Claude Code, Cursor, Codex, and Gemini CLI.
 
-No API keys or dependencies are required. The repository contains a `SKILL.md` file, supporting reference docs, and one optional helper script — `tools/deck_lint.py` — that cross-checks a multi-artifact deck pack.
+No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and two optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, and `tools/render_pptx.py` renders a payload into a real `.pptx` (the only one with a dependency — `python-pptx`).
 
-It produces a slide-by-slide script; it does not create a `.pptx` file.
+It produces a slide-by-slide script. By default it does not create a `.pptx` file; the optional renderer turns the structured payload into one, with optional corporate slide-master mapping.
 
 ## Why
 
@@ -129,14 +129,18 @@ repository-root/
 │   ├── output-contract.md         # optional JSON/YAML deck payload
 │   ├── export-checklist.md        # pre-export hard/soft gates
 │   ├── html-export.md             # single-file HTML deck convention
+│   ├── rendering-handoff.md       # payload → .pptx render workflow and naming
+│   ├── master-mapping.md          # corporate slide-master layout/placeholder mapping
 │   └── rehearsal-notes.md · executive-one-pager.md         # speaker-only notes pack
 ├── tools/
-│   └── deck_lint.py               # pack consistency checker (optional)
+│   ├── deck_lint.py               # pack consistency checker (optional)
+│   └── render_pptx.py             # payload → .pptx renderer (optional, needs python-pptx)
 └── examples/
     ├── status-report.md
     ├── status-report.json         # same deck as structured payload
     ├── status-report.html         # same deck as offline HTML
     ├── status-report-notes.md     # same deck as rehearsal talk track
+    ├── master-map.example.json    # worked corporate master map
     ├── investor-update.md
     └── training.md
 ```
@@ -152,6 +156,8 @@ repository-root/
 | `references/output-contract.md` | The user wants JSON/YAML or a rendering payload |
 | `references/export-checklist.md` | Before any hand-off or render |
 | `references/html-export.md` | The user wants a single-file HTML deck |
+| `references/rendering-handoff.md` | The user wants a real `.pptx` file |
+| `references/master-mapping.md` | The deck must land in a corporate slide master |
 | `references/rehearsal-notes.md` | The user wants a rehearsal / speaker-only script |
 
 ## Examples
@@ -162,6 +168,7 @@ repository-root/
 | [status-report.json](examples/status-report.json) | Same deck as a structured JSON payload |
 | [status-report.html](examples/status-report.html) | Same deck as an offline HTML presentation |
 | [status-report-notes.md](examples/status-report-notes.md) | Same deck as a rehearsal talk track |
+| [master-map.example.json](examples/master-map.example.json) | Worked corporate master map (layouts + placeholders) |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
 
@@ -175,6 +182,20 @@ python tools/deck_lint.py examples/status-report --strict   # warnings fail too
 ```
 
 It checks slide counts, headline wording, timing math, per-slide note budgets and the numeric claims each copy repeats, then reports hard-gate errors and soft warnings. The exit code is 1 on failure, so it drops straight into CI. Standard library only, no install step.
+
+## Render to .pptx (optional)
+
+The skill's default output is the slide script. When the user wants an actual file, the structured payload from `references/output-contract.md` is enough: `tools/render_pptx.py` writes one slide per payload slide and carries the speaker notes into the PowerPoint notes pane.
+
+```bash
+pip install python-pptx
+python tools/render_pptx.py examples/status-report.json                    # bundled Office master
+python tools/render_pptx.py deck.json --check                              # resolve layouts, write nothing
+python tools/render_pptx.py deck.json --template acme.potx \
+    --master-map acme-master-map.json                                      # corporate master
+```
+
+Output follows the export naming convention: `{deck-slug}_{version}_{YYYYMMDD}.pptx`, or `{deck-slug}_{version}_{slot}min_{YYYYMMDD}.pptx` with `--slot`. Layout and placeholder resolution is described in `references/master-mapping.md` (name → keyword → index, with per-role placeholder indices); the full workflow, dependency and troubleshooting notes are in `references/rendering-handoff.md`. `python-pptx` is the only dependency in the repository — if it cannot be installed, hand over the Markdown deck plus the payload instead.
 
 ## Related projects
 
