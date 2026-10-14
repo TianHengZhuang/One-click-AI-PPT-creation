@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.8.0 (2026-10-14)
+
+### Added
+- `tools/deck_review.py` — audits a deck that already exists (Markdown or output-contract JSON): hard gates, warnings, a 0-100 score across structure / copy / evidence / delivery, and a READY / REVISE / REWRITE verdict; `--slot`, `--min-score`, `--strict`, `--json`, `--out` and `--quiet`; Chinese decks are reviewed in characters per minute; standard library only
+- `references/deck-review.md` — what the review checks, every finding code, the scoring model, the Chinese rules, and how the review complements `tools/deck_lint.py`
+- `references/audience-simulation.md` — the pre-delivery stress test: pick two or three seats, ask their questions against the slides, mark answered / partial / gap, recommend the smallest fix set
+- `examples/deck-review.example.md` — worked review of `examples/status-report.md`
+- `examples/audience-simulation.example.md` — worked three-seat simulation of the same deck
+
+### Changed
+- SKILL.md — Step 5 routes an existing deck through `tools/deck_review.py` instead of rewriting it blind, and adds the audience-simulation pass before a decision meeting; edge cases, tools and examples index updated
+- README.md — structure tree, reference table, example table and a "Review an existing deck" section
+
 ## v1.7.0 (2026-09-22)
 
 ### Added

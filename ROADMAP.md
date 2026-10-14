@@ -4,6 +4,13 @@ One-Click AI PPT evolution plan.
 
 ## Released
 
+### v1.8.0 — Deck Review and Audience Simulation (2026-10-14)
+
+- `tools/deck_review.py` — audits an existing deck against the skill's rules: hard gates, warnings, a structure / copy / evidence / delivery score and a READY / REVISE / REWRITE verdict, in English or Chinese
+- `references/deck-review.md` — the checks, the finding codes and the scoring model
+- `references/audience-simulation.md` — a seat-by-seat stress test before a decision meeting
+- `examples/deck-review.example.md`, `examples/audience-simulation.example.md` — worked samples on the status-report deck
+
 ### v1.7.0 — Rendering Handoff (2026-09-22)
 
 - `tools/render_pptx.py` — renders an output-contract payload to a `.pptx`, into the bundled Office master or a corporate template
@@ -41,7 +48,4 @@ One-Click AI PPT evolution plan.
 
 ## Planned
 
-### Long-Term
-
-- Deck review mode: audit an existing deck against the skill's rules
-- Audience-simulation pass before delivery
+No committed scope for the next release. Candidate ideas are tracked in issues.

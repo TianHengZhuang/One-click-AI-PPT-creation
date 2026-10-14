@@ -6,7 +6,7 @@ Turn a bare topic into a complete business deck — outline, slide text, and spe
 
 One-Click PPT is a small Agent Skill that turns a topic into a presentation-ready deck: a structured outline, per-slide headlines, bullets, visual suggestions, and speaker notes. It works in clients that support the Agent Skills format, including Claude Code, Cursor, Codex, and Gemini CLI.
 
-No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and two optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, and `tools/render_pptx.py` renders a payload into a real `.pptx` (the only one with a dependency — `python-pptx`).
+No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and three optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, `tools/deck_review.py` audits a deck that already exists, and `tools/render_pptx.py` renders a payload into a real `.pptx` (the only one with a dependency — `python-pptx`).
 
 It produces a slide-by-slide script. By default it does not create a `.pptx` file; the optional renderer turns the structured payload into one, with optional corporate slide-master mapping.
 
@@ -131,15 +131,19 @@ repository-root/
 │   ├── html-export.md             # single-file HTML deck convention
 │   ├── rendering-handoff.md       # payload → .pptx render workflow and naming
 │   ├── master-mapping.md          # corporate slide-master layout/placeholder mapping
-│   └── rehearsal-notes.md · executive-one-pager.md         # speaker-only notes pack
+│   ├── deck-review.md             # deck audit: hard gates, finding codes, scoring
+│   └── rehearsal-notes.md · executive-one-pager.md · audience-simulation.md    # speaker-only notes pack; pre-delivery seat pass
 ├── tools/
 │   ├── deck_lint.py               # pack consistency checker (optional)
+│   ├── deck_review.py             # existing-deck auditor (optional)
 │   └── render_pptx.py             # payload → .pptx renderer (optional, needs python-pptx)
 └── examples/
     ├── status-report.md
     ├── status-report.json         # same deck as structured payload
     ├── status-report.html         # same deck as offline HTML
     ├── status-report-notes.md     # same deck as rehearsal talk track
+    ├── deck-review.example.md     # worked review of status-report.md
+    ├── audience-simulation.example.md   # worked seat-by-seat pass on the same deck
     ├── master-map.example.json    # worked corporate master map
     ├── investor-update.md
     └── training.md
@@ -158,6 +162,8 @@ repository-root/
 | `references/html-export.md` | The user wants a single-file HTML deck |
 | `references/rendering-handoff.md` | The user wants a real `.pptx` file |
 | `references/master-mapping.md` | The deck must land in a corporate slide master |
+| `references/deck-review.md` | Auditing a deck that already exists |
+| `references/audience-simulation.md` | Stress-testing the deck against the room before a decision meeting |
 | `references/rehearsal-notes.md` | The user wants a rehearsal / speaker-only script |
 
 ## Examples
@@ -168,6 +174,8 @@ repository-root/
 | [status-report.json](examples/status-report.json) | Same deck as a structured JSON payload |
 | [status-report.html](examples/status-report.html) | Same deck as an offline HTML presentation |
 | [status-report-notes.md](examples/status-report-notes.md) | Same deck as a rehearsal talk track |
+| [deck-review.example.md](examples/deck-review.example.md) | Worked review report for the status-report deck |
+| [audience-simulation.example.md](examples/audience-simulation.example.md) | Worked three-seat simulation of the same deck |
 | [master-map.example.json](examples/master-map.example.json) | Worked corporate master map (layouts + placeholders) |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
@@ -182,6 +190,20 @@ python tools/deck_lint.py examples/status-report --strict   # warnings fail too
 ```
 
 It checks slide counts, headline wording, timing math, per-slide note budgets and the numeric claims each copy repeats, then reports hard-gate errors and soft warnings. The exit code is 1 on failure, so it drops straight into CI. Standard library only, no install step.
+
+## Review an existing deck (optional)
+
+When the deck already exists — a colleague's draft, last quarter's deck, or one you have just written — audit it before rewriting anything:
+
+```bash
+python tools/deck_review.py examples/status-report.md
+python tools/deck_review.py examples/status-report.json --json
+python tools/deck_review.py examples/status-report.md --slot 5 --out review.md
+```
+
+`tools/deck_review.py` reads a Markdown deck or an output-contract payload and reports the hard gates that block a hand-off, the warnings worth a look, a 0-100 score across structure, copy, evidence and delivery, and a READY / REVISE / REWRITE verdict. Add `--slot <minutes>` to check the deck against a time slot, `--min-score <n>` to fail under a score, and `--strict` to fail on warnings as well; the exit code is 0 only when the run passes, so it drops straight into CI. Chinese decks are reviewed in characters per minute, matching `references/zh-cn-adaptation.md`. Standard library only, no install step. Every check and finding code is documented in `references/deck-review.md`, and `examples/deck-review.example.md` is a worked report on the status-report deck.
+
+The review is static, so pair it with the seat-by-seat pass in `references/audience-simulation.md` before a decision meeting: pick two or three seats (exec sponsor, sceptic, operator), ask each seat's questions against the slides, mark every answer answered / partial / gap, then add only what the gaps require. `examples/audience-simulation.example.md` works through the same deck.
 
 ## Render to .pptx (optional)
 

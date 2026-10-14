@@ -69,6 +69,10 @@ If the user asks for a rehearsal script, speaker-only notes, or a talk track, em
 
 If the pack ships as more than one artifact (Markdown plus JSON, notes and/or HTML), run `python tools/deck_lint.py <deck-path>` before hand-off. It cross-checks slide counts, headlines, timing and numbered claims across the copies and reports hard-gate failures and soft warnings. Worked sample: `python tools/deck_lint.py examples/status-report`.
 
+If a deck already exists — the user brings one to review, or you just wrote one — audit it before touching the copy: `python tools/deck_review.py <deck-path>` reports the hard gates that block a hand-off, the warnings worth a look, a 0-100 score across structure / copy / evidence / delivery and a READY / REVISE / REWRITE verdict. Add `--slot <minutes>` to check the deck against a time slot, `--json` for a machine-readable report, and `--min-score` / `--strict` to make the run fail when it should. Rules and finding codes: `references/deck-review.md`. Worked sample: `examples/deck-review.example.md`.
+
+Before a decision meeting, stress-test the deck against the room using the seat-by-seat pass in `references/audience-simulation.md`: pick two or three seats, ask each seat's questions against the slides, mark every answer answered / partial / gap, then recommend the smallest set of additions. Worked sample: `examples/audience-simulation.example.md`.
+
 If the user asks for a real `.pptx` file, follow `references/rendering-handoff.md`: emit the structured payload first, lint the pack, then run `python tools/render_pptx.py <payload>.json`. Add `--template <corporate>.potx --master-map <map>.json` to land the deck in a corporate slide master (see `references/master-mapping.md`), and `--check` to resolve every layout without writing a file. The renderer needs `python-pptx`; if it cannot be installed, hand over the Markdown deck plus the payload instead.
 
 ## Copywriting rules
@@ -97,7 +101,7 @@ Write in the language the user asks for. When the output is Chinese, also apply 
 
 - Topic is vague ("something about marketing"): propose 3 concrete angles and let the user pick.
 - User wants another language: write in that language, keep the same structure. For Chinese, apply references/zh-cn-adaptation.md.
-- User brings an existing deck to fix: audit it against the copywriting rules and return a corrected outline, keeping their own content.
+- User brings an existing deck to fix: run `tools/deck_review.py` on it, fix the hard gates and the flagged copy, and return a corrected outline, keeping their own content and message.
 - User wants a real .pptx file: provide the full outline plus slide text in a format they can paste into PowerPoint/Keynote/Google Slides, and offer the structure for a rendering script.
 
 ## Examples
@@ -107,6 +111,8 @@ Structured payload sample: examples/status-report.json.
 Offline HTML sample: examples/status-report.html.
 Rehearsal talk track sample: examples/status-report-notes.md.
 Pack checker: tools/deck_lint.py (optional, standard library only).
+Deck review: tools/deck_review.py (optional, standard library only); worked report: examples/deck-review.example.md.
+Audience simulation: references/audience-simulation.md; worked pass: examples/audience-simulation.example.md.
 Renderer (optional, needs python-pptx): tools/render_pptx.py — payload to .pptx, with corporate master mapping.
 Master map sample: examples/master-map.example.json.
 
