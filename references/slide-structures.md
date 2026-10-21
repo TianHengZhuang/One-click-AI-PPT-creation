@@ -203,6 +203,73 @@ Pick the closest structure, then adapt slide count to the time limit (roughly on
 7. How it affects you — what changes for each team
 8. Questions
 
+## 17. Academic defense (12 slides)
+
+1. Research question — the gap this work fills, in one sentence
+2. Motivation — why the gap matters and who it affects
+3. Contributions — the two or three claims you will defend
+4. Related work — how this differs from the closest prior art
+5. Method — the approach, one diagram at the top level
+6. Experimental setup — data, baselines, metrics, and what "better" means
+7. Results — the headline numbers, no hedging yet
+8. Analysis — why it works, not just that it works (ablations, error cases)
+9. Limitations — what the work does and does not claim
+10. Discussion and future work
+11. Summary — contributions restated, one per bullet
+12. Backup / appendix pointers
+
+## 18. Crisis communication (8 slides)
+
+1. The situation — what happened, facts only, no speculation
+2. What we know and what we do not — the honest line between them
+3. What we are doing right now — actions already in flight
+4. Who is affected and how we are reaching them
+5. The message — the one line we are telling everyone, verbatim
+6. Timeline — what happens next, with owners and times
+7. Risks and what we are watching
+8. Where to get the next update
+
+## 19. Seed / early-stage fundraise (12 slides)
+
+1. Vision — the company you are building, one sentence
+2. Problem — the pain and exactly who feels it
+3. Solution — the product, one sentence, no features yet
+4. Why now — the market shift that makes this the moment
+5. How it works — the mechanics in one flow
+6. Traction — early signals, even small ones, with their trend
+7. Market — TAM / SAM / SOM, the honest numbers
+8. Business model — how money is made, one slide
+9. Competition — the landscape and your wedge
+10. Team — why these founders, in two lines each
+11. The ask — amount, use of funds, the milestone it buys
+12. Contact / appendix
+
+## 20. Sales demo / proof of concept (10 slides)
+
+1. The customer's problem — restated in their own words
+2. The cost of the status quo — quantified
+3. What we will show today — the demo agenda
+4. The happy path — the core workflow, live
+5. The proof point — the one metric that changes for them
+6. Their edge case — the specific scenario they raised
+7. What it takes to go live — integration, timeline, effort
+8. Pricing and packaging — options, not one price
+9. Customer proof — who else has done this, with a number
+10. Next step and evaluation criteria
+
+## 21. Conference keynote (10 slides)
+
+1. The big idea — the one claim you want them to remember
+2. Why this matters now — the stakes, made personal
+3. The problem as they experience it
+4. The shift — what changed that makes the idea possible
+5. The idea, made concrete — one story or demo
+6. Evidence — the numbers that back it up
+7. The counterargument — steelman it, then answer it
+8. What it means for them — the takeaway each seat walks out with
+9. A call to think or act
+10. Closing — the one line to leave in the room
+
 ## Choosing a structure
 
 | If the deck is about | Use |
@@ -223,6 +290,11 @@ Pick the closest structure, then adapt slide count to the time limit (roughly on
 | Getting a design approved | 14 Technical design review |
 | Explaining a failure | 15 Post-mortem |
 | Updating the whole company | 16 All-hands update |
+| Defending a thesis or paper | 17 Academic defense |
+| Responding to an incident in public | 18 Crisis communication |
+| Raising a first or seed round | 19 Seed / early-stage fundraise |
+| Winning a proof-of-concept evaluation | 20 Sales demo / proof of concept |
+| Giving an industry talk | 21 Conference keynote |
 
 ## Rules of thumb
 

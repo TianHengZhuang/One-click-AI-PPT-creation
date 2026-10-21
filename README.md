@@ -122,7 +122,7 @@ repository-root/
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 ├── references/
-│   ├── slide-structures.md        # 16 deck structures by purpose
+│   ├── slide-structures.md        # 21 deck structures by purpose
 │   ├── copywriting-guide.md       # copy rules and examples
 │   ├── design-guide.md            # layout, type scale, colour, charts
 │   ├── zh-cn-adaptation.md        # Chinese-language adaptation
@@ -145,6 +145,7 @@ repository-root/
     ├── deck-review.example.md     # worked review of status-report.md
     ├── audience-simulation.example.md   # worked seat-by-seat pass on the same deck
     ├── master-map.example.json    # worked corporate master map
+    ├── crisis-comms.md            # crisis communication — platform outage
     ├── investor-update.md
     └── training.md
 ```
@@ -177,6 +178,7 @@ repository-root/
 | [deck-review.example.md](examples/deck-review.example.md) | Worked review report for the status-report deck |
 | [audience-simulation.example.md](examples/audience-simulation.example.md) | Worked three-seat simulation of the same deck |
 | [master-map.example.json](examples/master-map.example.json) | Worked corporate master map (layouts + placeholders) |
+| [crisis-comms.md](examples/crisis-comms.md) | Crisis communication — platform outage |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
 

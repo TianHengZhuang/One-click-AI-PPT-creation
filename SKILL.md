@@ -21,7 +21,7 @@ Ask for: target audience, time limit (5/10/20 min), desired number of slides (de
 
 ### Step 2 — Pick a structure
 
-Choose from the 16 structures in references/slide-structures.md, or use its "Choosing a structure" table. Default: the 10-slide Business Pitch. Match the structure to the purpose:
+Choose from the 21 structures in references/slide-structures.md, or use its "Choosing a structure" table. Default: the 10-slide Business Pitch. Match the structure to the purpose:
 
 - Pitch / proposal → Problem → Solution → Market → Traction → Ask
 - Status report → Wins → Metrics → Issues → Next steps
@@ -106,7 +106,7 @@ Write in the language the user asks for. When the output is Chinese, also apply 
 
 ## Examples
 
-Worked decks live in examples/: examples/status-report.md, examples/investor-update.md, examples/training.md.
+Worked decks live in examples/: examples/status-report.md, examples/investor-update.md, examples/training.md, examples/crisis-comms.md.
 Structured payload sample: examples/status-report.json.
 Offline HTML sample: examples/status-report.html.
 Rehearsal talk track sample: examples/status-report-notes.md.

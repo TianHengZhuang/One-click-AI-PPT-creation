@@ -4,6 +4,11 @@ One-Click AI PPT evolution plan.
 
 ## Released
 
+### v1.9.0 — Scene-Specific Deck Structures (2026-10-21)
+
+- `references/slide-structures.md` — five new structures: academic defense, crisis communication, seed / early-stage fundraise, sales demo / proof of concept, and conference keynote, with the "Choosing a structure" table extended
+- `examples/crisis-comms.md` — worked crisis communication deck on a platform outage
+
 ### v1.8.0 — Deck Review and Audience Simulation (2026-10-14)
 
 - `tools/deck_review.py` — audits an existing deck against the skill's rules: hard gates, warnings, a structure / copy / evidence / delivery score and a READY / REVISE / REWRITE verdict, in English or Chinese

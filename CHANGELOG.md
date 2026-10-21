@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.9.0 (2026-10-21)
+
+### Added
+- `references/slide-structures.md` — five scene-specific structures: 17 Academic defense, 18 Crisis communication, 19 Seed / early-stage fundraise, 20 Sales demo / proof of concept, 21 Conference keynote; the "Choosing a structure" table extended to match
+- `examples/crisis-comms.md` — worked 8-slide crisis communication deck on a platform outage
+
+### Changed
+- SKILL.md — Step 2 now selects from 21 structures; the examples index lists the crisis-comms deck
+- README.md — structure tree and example table list the new structure count and the crisis-comms sample
+
 ## v1.8.0 (2026-10-14)
 
 ### Added
