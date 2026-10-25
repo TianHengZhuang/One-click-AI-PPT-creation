@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.0.0 (unreleased)
+
+### Added
+- `tools/source_extract.py` — condenses attached source material (PDF, Word, spreadsheets, PowerPoint, Markdown, CSV/TSV, plain text, folders) into one `source-brief.json`: sections, addressable chunks (`file.pdf#3`), tables and deduplicated numbers with context; a single unreadable file never stops the run; standard library only, binary formats need `pypdf` / `python-docx` / `python-pptx` / `openpyxl` and fall back with an install hint when missing
+- `references/source-brief.md` — when to run the extractor, every flag, what the brief holds, how chunk ids are referenced from slides
+- `tests/test_source_extract.py` — 25 cases covering chunk ids, table extraction, number regexes (grouped thousands, trailing punctuation, version strings) and CLI exit codes
+
+### Changed
+- README.md — helper-script count, tools tree and reference tree list the extractor and the brief
+- SKILL.md — tools index gains the source extractor and the brief reference
+
 ## v1.9.0 (2026-10-21)
 
 ### Added

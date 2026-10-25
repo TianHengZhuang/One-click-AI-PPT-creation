@@ -6,7 +6,7 @@ Turn a bare topic into a complete business deck — outline, slide text, and spe
 
 One-Click PPT is a small Agent Skill that turns a topic into a presentation-ready deck: a structured outline, per-slide headlines, bullets, visual suggestions, and speaker notes. It works in clients that support the Agent Skills format, including Claude Code, Cursor, Codex, and Gemini CLI.
 
-No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and three optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, `tools/deck_review.py` audits a deck that already exists, and `tools/render_pptx.py` renders a payload into a real `.pptx` (the only one with a dependency — `python-pptx`).
+No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and four optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, `tools/deck_review.py` audits a deck that already exists, `tools/render_pptx.py` renders a payload into a real `.pptx` (`python-pptx`), and `tools/source_extract.py` condenses attached source material into one `source-brief.json` (standard library only; PDF, Word, PowerPoint and Excel inputs need `pypdf`, `python-docx`, `python-pptx` or `openpyxl`).
 
 It produces a slide-by-slide script. By default it does not create a `.pptx` file; the optional renderer turns the structured payload into one, with optional corporate slide-master mapping.
 
@@ -132,11 +132,13 @@ repository-root/
 │   ├── rendering-handoff.md       # payload → .pptx render workflow and naming
 │   ├── master-mapping.md          # corporate slide-master layout/placeholder mapping
 │   ├── deck-review.md             # deck audit: hard gates, finding codes, scoring
+│   ├── source-brief.md            # source brief: sections, chunks, tables, numbers, evidence
 │   └── rehearsal-notes.md · executive-one-pager.md · audience-simulation.md    # speaker-only notes pack; pre-delivery seat pass
 ├── tools/
 │   ├── deck_lint.py               # pack consistency checker (optional)
 │   ├── deck_review.py             # existing-deck auditor (optional)
-│   └── render_pptx.py             # payload → .pptx renderer (optional, needs python-pptx)
+│   ├── render_pptx.py             # payload → .pptx renderer (optional, needs python-pptx)
+│   └── source_extract.py          # source documents → one source-brief.json (optional)
 └── examples/
     ├── status-report.md
     ├── status-report.json         # same deck as structured payload
