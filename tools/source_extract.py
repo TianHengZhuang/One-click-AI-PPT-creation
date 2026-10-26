@@ -114,13 +114,14 @@ def sentence_around(text: str, start: int, end: int, width: int = 160) -> str:
 
 
 def split_chunks(text: str, path: str, section: str,
-                 size: int = DEFAULT_CHUNK_CHARS) -> list[dict]:
+                 size: int = DEFAULT_CHUNK_CHARS,
+                 start_index: int = 0) -> list[dict]:
     chunks: list[dict] = []
     clean = norm_ws(text)
     if not clean:
         return chunks
     step = max(1, size - CHUNK_OVERLAP)
-    index = 0
+    index = start_index
     for start in range(0, len(clean), step):
         piece = clean[start:start + size]
         if not piece.strip():
@@ -502,9 +503,12 @@ def read_source(path: Path, max_chars: int) -> dict:
         for s in sections
     ]
     for section in sections:
+        # Chunk ids are unique per document, not per section: the skill cites
+        # them across sections, so ``#1`` must not repeat.
         entry["chunks"].extend(split_chunks(
             section.get("text", ""), entry["path"],
-            section.get("heading", "") or "(untitled)"))
+            section.get("heading", "") or "(untitled)",
+            start_index=len(entry["chunks"])))
     entry["tables"] = result.get("tables", [])
     # Numbers are collected per section so a figure keeps its page or sheet
     # locator; a document without sections falls back to the whole body.

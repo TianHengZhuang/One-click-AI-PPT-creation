@@ -5,11 +5,15 @@
 ### Added
 - `tools/source_extract.py` — condenses attached source material (PDF, Word, spreadsheets, PowerPoint, Markdown, CSV/TSV, plain text, folders) into one `source-brief.json`: sections, addressable chunks (`file.pdf#3`), tables and deduplicated numbers with context; a single unreadable file never stops the run; standard library only, binary formats need `pypdf` / `python-docx` / `python-pptx` / `openpyxl` and fall back with an install hint when missing
 - `references/source-brief.md` — when to run the extractor, every flag, what the brief holds, how chunk ids are referenced from slides
-- `tests/test_source_extract.py` — 25 cases covering chunk ids, table extraction, number regexes (grouped thousands, trailing punctuation, version strings) and CLI exit codes
+- `tests/test_source_extract.py` — 26 cases covering chunk ids, table extraction, number regexes (grouped thousands, trailing punctuation, version strings) and CLI exit codes
 
 ### Changed
 - README.md — helper-script count, tools tree and reference tree list the extractor and the brief
-- SKILL.md — tools index gains the source extractor and the brief reference
+- SKILL.md — Step 0 condenses attached material into `source-brief.json` before the deck is drafted; Step 3 closes every slide purpose with the chunks it draws on; Step 4 drops any number that is in neither the brief nor the user's message; the tools index and edge cases cover attached sources
+
+### Fixed
+- `tools/source_extract.py` — chunk ids restarted at `#1` in every section, so a document with several sections produced duplicate ids and a cited chunk could not be resolved; numbering now runs across the whole document
+- `tests/test_source_extract.py` — a case pins chunk id uniqueness across sections
 
 ## v1.9.0 (2026-10-21)
 
