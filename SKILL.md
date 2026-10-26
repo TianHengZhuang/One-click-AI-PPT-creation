@@ -114,6 +114,7 @@ Pack checker: tools/deck_lint.py (optional, standard library only).
 Deck review: tools/deck_review.py (optional, standard library only); worked report: examples/deck-review.example.md.
 Audience simulation: references/audience-simulation.md; worked pass: examples/audience-simulation.example.md.
 Renderer (optional, needs python-pptx): tools/render_pptx.py — payload to .pptx, with corporate master mapping.
+Source extract: tools/source_extract.py (optional, standard library only; PDF / Word / PowerPoint / Excel need pypdf, python-docx, python-pptx or openpyxl) — attached material to one source-brief.json; what the brief holds: references/source-brief.md.
 Master map sample: examples/master-map.example.json.
 
 ---
