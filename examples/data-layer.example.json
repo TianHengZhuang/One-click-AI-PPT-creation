@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.1",
+  "meta": {
+    "title": "Q3 Platform Migration — Data Review",
+    "audience": "VP Engineering and peer leads",
+    "purpose": "report",
+    "language": "en",
+    "target_minutes": 5,
+    "slide_count": 6,
+    "est_minutes": 4.5,
+    "structure_id": "status-report"
+  },
+  "slides": [
+    {
+      "id": 1,
+      "title": "Migration is 70% complete and on the original schedule",
+      "bullets": [
+        "14 of 20 services cut over",
+        "Zero customer-visible incidents this quarter",
+        "The remaining 6 services carry 80% of traffic"
+      ],
+      "visual": "progress bar with all 20 services marked, the last 6 in a contrasting colour",
+      "speaker_notes": "We are at 70% with no customer impact. The remaining six services carry most of our traffic, so the last third is where the risk lives.",
+      "est_seconds": 36
+    },
+    {
+      "id": 2,
+      "title": "Cut-over time fell by three quarters",
+      "bullets": [
+        "Runbook rewrite took the median cut-over from 6 hours to 90 minutes",
+        "Rollback exercised twice in production, both clean",
+        "Two blocked teams now self-serve"
+      ],
+      "chart": {
+        "type": "bar",
+        "title": "Median cut-over time, hours",
+        "categories": ["Q4 baseline", "Q1", "Q2", "Q3"],
+        "series": [
+          { "name": "Median hours", "values": [7.5, 6.0, 3.2, 1.5] }
+        ],
+        "unit": "hours",
+        "emphasis": [3],
+        "source": "Platform team runbook log, 41 cut-overs"
+      },
+      "speaker_notes": "The runbook change is the reason we caught up. Rollback has been tested for real, not on paper.",
+      "est_seconds": 40
+    },
+    {
+      "id": 3,
+      "title": "Availability held while latency improved",
+      "bullets": [
+        "Availability 99.97% against a 99.95% target",
+        "p95 latency down 12% after the second cut-over"
+      ],
+      "chart": {
+        "type": "line",
+        "title": "p95 latency by month, ms",
+        "categories": ["Jul", "Aug", "Sep"],
+        "series": [
+          { "name": "p95 latency", "values": [412, 389, 362] }
+        ],
+        "unit": "ms",
+        "source": "SLO dashboard, rolling 30-day window"
+      },
+      "speaker_notes": "Latency improved as a side effect of the new routing layer. Error budget is comfortable.",
+      "est_seconds": 38
+    },
+    {
+      "id": 4,
+      "title": "Two issues are open and both have owners",
+      "bullets": [
+        "Billing schema dependency blocks service 15",
+        "On-call load is up 30% during cut-over weekends"
+      ],
+      "table": {
+        "columns": ["Issue", "Owner", "Opened", "Blocks"],
+        "rows": [
+          ["Billing schema dependency", "Billing", "12 Aug", "Service 15"],
+          ["On-call load during cut-over", "Platform", "3 Sep", "Team capacity"]
+        ],
+        "caption": "Open issues, Q3 migration",
+        "source": "Migration tracker, exported 30 Sep"
+      },
+      "speaker_notes": "Neither issue threatens the schedule yet. The billing dependency is the one to watch.",
+      "est_seconds": 36
+    },
+    {
+      "id": 5,
+      "title": "The billing dependency is the schedule risk",
+      "bullets": [
+        "Billing ships on 15 October, three weeks before the cut-over window",
+        "No buffer if that slips",
+        "Fallback costs two extra weeks of dual-write"
+      ],
+      "chart": {
+        "type": "stacked-bar",
+        "title": "Weeks remaining by path",
+        "categories": ["Plan of record", "Dual-write fallback"],
+        "series": [
+          { "name": "Migration work", "values": [6, 8] },
+          { "name": "Buffer", "values": [3, 1] }
+        ],
+        "unit": "weeks",
+        "source": "Planning estimate, 30 Sep"
+      },
+      "speaker_notes": "If billing slips past 15 October, we choose between missing the quarter or paying for the dual-write path.",
+      "est_seconds": 40
+    },
+    {
+      "id": 6,
+      "title": "Two decisions are needed today",
+      "bullets": [
+        "Accept the 15 October dependency as the plan of record",
+        "Pre-approve the dual-write fallback budget"
+      ],
+      "visual": "two decision cards with the owner of each",
+      "speaker_notes": "These are the only two things I need from this room.",
+      "est_seconds": 28
+    }
+  ]
+}

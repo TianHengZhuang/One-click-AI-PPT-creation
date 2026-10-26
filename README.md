@@ -163,7 +163,7 @@ repository-root/
 | `references/output-contract.md` | The user wants JSON/YAML or a rendering payload |
 | `references/export-checklist.md` | Before any hand-off or render |
 | `references/html-export.md` | The user wants a single-file HTML deck |
-| `references/rendering-handoff.md` | The user wants a real `.pptx` file |
+| `references/rendering-handoff.md` | The user wants a real `.pptx` file (incl. chart / table layers) |
 | `references/master-mapping.md` | The deck must land in a corporate slide master |
 | `references/deck-review.md` | Auditing a deck that already exists |
 | `references/audience-simulation.md` | Stress-testing the deck against the room before a decision meeting |
@@ -180,6 +180,7 @@ repository-root/
 | [deck-review.example.md](examples/deck-review.example.md) | Worked review report for the status-report deck |
 | [audience-simulation.example.md](examples/audience-simulation.example.md) | Worked three-seat simulation of the same deck |
 | [master-map.example.json](examples/master-map.example.json) | Worked corporate master map (layouts + placeholders) |
+| [data-layer.example.json](examples/data-layer.example.json) | Same status deck with native charts and a table (schema 1.1) |
 | [crisis-comms.md](examples/crisis-comms.md) | Crisis communication — platform outage |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
 | [training.md](examples/training.md) | Training — expense policy |
@@ -211,11 +212,12 @@ The review is static, so pair it with the seat-by-seat pass in `references/audie
 
 ## Render to .pptx (optional)
 
-The skill's default output is the slide script. When the user wants an actual file, the structured payload from `references/output-contract.md` is enough: `tools/render_pptx.py` writes one slide per payload slide and carries the speaker notes into the PowerPoint notes pane.
+The skill's default output is the slide script. When the user wants an actual file, the structured payload from `references/output-contract.md` is enough: `tools/render_pptx.py` writes one slide per payload slide and carries the speaker notes into the PowerPoint notes pane. A slide may also carry a `chart` or `table` block, which becomes a native, editable PowerPoint object laid out beside the copy — no images, no re-typing the data.
 
 ```bash
 pip install python-pptx
 python tools/render_pptx.py examples/status-report.json                    # bundled Office master
+python tools/render_pptx.py examples/data-layer.example.json               # charts + table as native objects
 python tools/render_pptx.py deck.json --check                              # resolve layouts, write nothing
 python tools/render_pptx.py deck.json --template acme.potx \
     --master-map acme-master-map.json                                      # corporate master

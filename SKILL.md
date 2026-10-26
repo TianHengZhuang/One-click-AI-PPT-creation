@@ -55,7 +55,7 @@ For every slide output:
 - **Headline**: a claim or takeaway, not a label ("Q3 revenue grew 18% on enterprise renewals", not "Revenue").
 - **3–5 bullet points max**, each under 12 words.
 - **Numbers you can point at**: every figure in a headline or bullet must appear in `source-brief.json` or in the user's own message. If it is in neither, drop the number or mark the gap — never round it into something plausible.
-- **One visual suggestion** per slide (chart, diagram, screenshot, icon).
+- **One visual suggestion** per slide (chart, diagram, screenshot, icon). When the point is a number comparison the audience should read at a glance, ship it as a structured `chart` or `table` block in the payload too (schema 1.1, limits in `references/output-contract.md`) — the renderer turns it into a native object; keep the `visual` line regardless, it is the Markdown fallback.
 - **Speaker note**: 2–3 sentences the presenter can say out loud.
 
 ### Step 5 — Format the output

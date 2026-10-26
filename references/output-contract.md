@@ -8,7 +8,7 @@ Top-level object:
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| `schema_version` | string | yes | Always `"1.0"` for this contract |
+| `schema_version` | string | yes | `"1.1"` (or `"1.0"` for text-only decks); 1.1 adds the optional data layer |
 | `meta` | object | yes | Deck-level metadata |
 | `slides` | array | yes | One entry per slide, in presentation order |
 
@@ -35,8 +35,80 @@ Top-level object:
 | `visual` | string | yes | One concrete visual suggestion |
 | `speaker_notes` | string | yes | 2–3 sentences the presenter can say out loud |
 | `est_seconds` | integer | yes | Estimated talk time for this slide |
+| `chart` | object | no | Native chart, schema 1.1 — see [Data layer](#data-layer-schema-11) |
+| `table` | object | no | Native table, schema 1.1 — see [Data layer](#data-layer-schema-11) |
 
 Do not invent extra top-level keys. If the user needs custom fields, put them under `meta.extra` as a free-form object.
+
+## Data layer (schema 1.1)
+
+A slide may carry **one** structured data block instead of leaving the figure to the
+`visual` sentence. The renderer turns it into a native, editable chart or table; the
+Markdown deck keeps the `visual` line, so nothing is lost for text-only consumers.
+
+Rules:
+
+- One data block per slide: never `chart` and `table` together.
+- Not on slide 1 (the title slide) and not on the closing slide.
+- `bullets` stay **3 or fewer** next to a data block; the deck copy shrinks to a side column.
+- Keep `visual` filled anyway — it is the fallback for Markdown and for slides that
+  lose their data block on a customer template.
+- Aggregates and comparisons only. If the audience needs the cell-level detail, ship
+  the table; if they need the shape of the trend, ship the chart.
+
+### `chart`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `type` | string | no | `column` (default), `bar`, `line`, `area`, `pie`, `doughnut`, `stacked-column`, `stacked-bar` |
+| `categories` | string[] | yes | 2–12 labels, in reading order |
+| `series` | object[] | yes | 1–4 series |
+| `series[].name` | string | no | Legend label; defaults to `Series` |
+| `series[].values` | number[] | yes | One value per category, same length as `categories` |
+| `title` | string | no | Chart title; omit if the slide headline already says it |
+| `unit` | string | no | Axis label, e.g. `hours`, `%`, `ms` |
+| `source` | string | no | Rendered as a small `Source:` line at the bottom |
+| `emphasis` | integer[] | no | Category indexes to draw in the accent colour |
+
+`pie` and `doughnut` plot the first series only. Line and column charts want a real
+axis scale — do not truncate the value axis to exaggerate a difference.
+
+### `table`
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `columns` | string[] | yes | 2–6 headers |
+| `rows` | array[] | yes | 1–8 rows, each with exactly `len(columns)` scalar cells |
+| `caption` | string | no | Shown in the speaker notes |
+| `source` | string | no | Rendered as a small `Source:` line at the bottom |
+
+Cells are short labels or formatted values (`"$1.2M"`, `"+3%"`), not sentences.
+Eight rows is the ceiling: a table the audience cannot read in one glance belongs in
+the appendix.
+
+### Example
+
+```json
+{
+  "id": 2,
+  "title": "Cut-over time fell by three quarters",
+  "bullets": ["Median cut-over: 6 hours to 90 minutes"],
+  "chart": {
+    "type": "bar",
+    "title": "Median cut-over time, hours",
+    "categories": ["Q4 baseline", "Q1", "Q2", "Q3"],
+    "series": [{ "name": "Median hours", "values": [7.5, 6.0, 3.2, 1.5] }],
+    "unit": "hours",
+    "emphasis": [3],
+    "source": "Platform team runbook log, 41 cut-overs"
+  },
+  "visual": "bar chart of median cut-over hours by quarter",
+  "speaker_notes": "The runbook change is why we caught up.",
+  "est_seconds": 40
+}
+```
+
+See `examples/data-layer.example.json` for a full six-slide payload.
 
 ## Timing model
 
@@ -122,7 +194,7 @@ slides:
 
 Before delivering structured output, check:
 
-1. `schema_version` is `"1.0"`.
+1. `schema_version` is `"1.1"` when a data layer is present, `"1.0"` otherwise.
 2. `meta.slide_count` equals the number of entries in `slides`.
 3. Slide `id` values are `1..N` with no gaps.
 4. Every slide has non-empty `title`, `bullets`, `visual`, `speaker_notes`, `est_seconds`.
@@ -130,6 +202,10 @@ Before delivering structured output, check:
 6. `est_minutes` matches `sum(est_seconds)/60` within 0.1.
 7. Language of titles/bullets/notes matches `meta.language`.
 8. Output is valid JSON (or valid YAML) — parse it mentally; no trailing commas, no comments in JSON.
+9. At most one of `chart` / `table` per slide, never on the first or last slide.
+10. Every `series[].values` is the same length as `categories`; every table row is as
+    long as `columns`.
+11. `python tools/render_pptx.py <payload> --check` passes when the user asked for a file.
 
 ## What this is not
 

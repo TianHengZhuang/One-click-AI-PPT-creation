@@ -16,7 +16,7 @@ Do **not** use it to skip the workflow: Step 1–4 (clarify → structure → ou
 
 | Input | Role | Required |
 |-------|------|----------|
-| `<deck>.json` | Deck payload in the output contract (`schema_version` `"1.0"`, `meta` + `slides`) | yes |
+| `<deck>.json` | Deck payload in the output contract (`schema_version` `"1.0"` or `"1.1"`, `meta` + `slides`) | yes |
 | `--template <file>.pptx\|.potx` | Corporate template supplying slide masters | no (defaults to the bundled Office master) |
 | `--master-map <file>.json` | Explicit layout + placeholder mapping for that template | no (auto-resolved, see `references/master-mapping.md`) |
 | `--out <path>.pptx` | Output file | no (naming convention below) |
@@ -43,9 +43,35 @@ The payload is the canonical source. A Markdown deck alone cannot be rendered �
 - `speaker_notes` go into the PowerPoint notes pane, followed by a `Visual: …` line so the suggested chart or diagram is not lost.
 - Layout roles are resolved against the template by name, then by keyword, then by index (see `references/master-mapping.md`).
 
+### Layers
+
+Slides with a `chart` or `table` block are laid out in four bands, top to bottom. The
+copy zone and the data zone split the body; they never overlap, and nothing enters the
+headline or footnote band.
+
+| Layer | Band | Content |
+|-------|------|---------|
+| `headline` | top, ~1.05 in | slide headline from the template title placeholder |
+| `copy` | body left (full width when there is no data block) | `bullets`, capped at 3 beside a data block |
+| `data` | body right, ~56% of body width | one native chart or table |
+| `footnote` | bottom strip | `Source: …` from `chart.source` / `table.source` |
+
+Widths are computed from the actual slide size, so a 4:3 template is not overrun.
+Charts are inserted as real PowerPoint chart objects (editable data, `type`, `series`
+and `emphasis` preserved); tables are real table shapes with the header row bolded at
+12 pt. Nothing is rasterised.
+
+When a data block cannot be drawn — python-pptx rejects the type, or the slide sits on
+a template whose body placeholder cannot be resized — the renderer keeps the copy,
+drops the block, and records the reason in `warnings`. The deck never fails to export
+because of a chart.
+
+`--json` returns `slides[].layers` (`{"copy": 3, "data": "chart:bar", "footnote": "…"}`)
+so a caller can confirm which layer each slide received.
+
 ## What the renderer does not do
 
-- It does not draw charts, diagrams or screenshots. `visual` stays a text cue in the notes; the human (or a later step) places the asset.
+- It does not draw free-form diagrams, screenshots or SmartArt. Only the structured `chart` / `table` blocks become objects; any other `visual` stays a text cue in the notes for the human to place.
 - It does not restyle copy. Headline and bullet wording goes in as written — the copywriting rules were already applied upstream.
 - It does not fix timing. If `meta.est_minutes` drifts from `meta.target_minutes`, trim notes or drop a slide first.
 - It does not overwrite silently: an existing output file is never replaced unless `--force` is passed.
@@ -80,11 +106,14 @@ If the user cannot install packages, stay on the no-dependency path: hand over t
 | Chinese bullets look cramped | Template body default is too small | Raise the body size in the template, or apply `references/zh-cn-adaptation.md` type sizes |
 | Notes pane empty | Payload slide has no `speaker_notes` | Fix the payload; `deck_lint` treats empty notes as an error |
 | Rendered file rejected by brand review | Template not applied | Pass `--template` with the corporate master |
+| Chart or table missing on a slide | Block dropped; read `warnings` in the `--json` report | Fix the block (see the limits in `references/output-contract.md`) or drop it and keep the `visual` cue |
+| Chart area looks squeezed | Bullets left over from a text-only draft | Keep 3 bullets beside a data block; move detail to the notes |
 
 ## Hand-off checklist
 
 - [ ] Payload validates (`python tools/render_pptx.py <payload> --check`).
 - [ ] `deck_lint` exits 0 on the pack.
 - [ ] Layout mapping report shows the expected role for every slide (no unintended fallbacks).
+- [ ] `slides[].layers` in the `--json` report lists the data layer you expected, and `warnings` is empty.
 - [ ] File name follows the export convention.
 - [ ] The `.pptx` opens and slide 1 / last slide are visibly correct.
