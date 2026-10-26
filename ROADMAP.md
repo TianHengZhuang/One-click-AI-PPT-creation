@@ -2,6 +2,18 @@
 
 One-Click AI PPT evolution plan.
 
+## In progress — v2.0.0 (unreleased)
+
+- `tools/source_extract.py` — attached material condensed into one `source-brief.json`, with addressable chunks cited from the slides
+- `tools/render_pptx.py` — native charts and tables, laid out in four bands per slide (schema 1.1)
+- `tools/evidence_lint.py` — citations checked against the source brief
+- `assets/layouts.json` — layout library: fourteen roles, 31 variants, copy budgets
+- `assets/themes/` + `tools/theme_apply.py` — three palettes, applied to an existing `.pptx` without touching geometry
+- `tools/deck_qa.py` — visual QA before hand-off: density, notes pace, chart/table load, contrast
+- References for each: `source-brief.md`, `output-contract.md` (schema 1.1), `layout-library.md`, `themes.md`, `visual-qa.md`
+
+Each slice lands in `release/v2.0.0` on its own branch and merges to `main` as one release.
+
 ## Released
 
 ### v1.9.0 — Scene-Specific Deck Structures (2026-10-21)

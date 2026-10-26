@@ -1,0 +1,33 @@
+{
+  "name": "editorial",
+  "label": "Editorial",
+  "when": "Narrative decks, investor updates, anything read as well as watched. Warm paper, serif headlines, brick accent.",
+  "palette": {
+    "bg": "#FAF7F2",
+    "ink": "#1C1B18",
+    "muted": "#5C574E",
+    "accent": "#8C3B2E",
+    "band": "#EFE9DF",
+    "rule": "#D6CEC0",
+    "on_accent": "#FAF7F2"
+  },
+  "font": {
+    "title": "Georgia",
+    "body": "Georgia",
+    "table": "Georgia"
+  },
+  "size": {
+    "title": 32,
+    "section": 26,
+    "body": 16,
+    "footnote": 10,
+    "table": 11
+  },
+  "chart_series": [
+    "#8C3B2E",
+    "#C08457",
+    "#4A5A4E",
+    "#D6CEC0"
+  ],
+  "table_header_fill": "#EFE9DF"
+}

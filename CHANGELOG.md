@@ -10,12 +10,25 @@
 - `examples/data-layer.example.json` — six-slide status deck with two charts, a stacked-bar comparison and an issues table
 - `tests/test_render_pptx.py` — 24 cases covering schema 1.0/1.1 acceptance, chart and table limits, the one-data-layer-per-slide rule, layer geometry (no overlap, footnote band untouched, 4:3 containment) and, when `python-pptx` is installed, native chart/table smoke renders
 - `tests/test_source_extract.py` — 26 cases covering chunk ids, table extraction, number regexes (grouped thousands, trailing punctuation, version strings) and CLI exit codes
+- `assets/layouts.json` — layout library: fourteen slide roles in 31 variants, each with a `when` line, four bands (headline, copy, data, footnote) in inches on a 16:9 canvas, and copy limits (`bullets`, `words_per_bullet`, `headline_words`, `data`); data only, no image, no python-pptx
+- `assets/themes/` — three themes as JSON palettes plus type scale: `consulting` (navy ink, blue accent), `swiss` (black on white, one red accent), `editorial` (warm paper, serif headlines, brick accent)
+- `tools/theme_apply.py` — re-skins an existing `.pptx` to a bundled theme: slide background, title/body/table type, chart series colours, table header fill and cell type; geometry untouched, so a designer's layout survives and a deck can be re-themed; `--list`, `--check`, `--out`, `--force`, `--json`; rejects a palette that breaks a contrast floor rather than shipping unreadable text
+- `tools/deck_qa.py` — pure standard-library visual QA on a payload: headline length and honesty, bullet count and length, figures with no chart, notes pace against `est_seconds`, chart and table load, repeated openers, theme contrast; fourteen rules QA101-QA114, 0-100 score with a letter grade, `--strict`, `--json`, `--report`, exit codes for CI
+- `references/layout-library.md` — canvas, role and variant table with copy budgets, band geometry, how the library relates to the renderer, how to add a variant
+- `references/themes.md` — the three themes, every field of a theme file, the contrast floors and why each one exists, how to add a palette
+- `references/visual-qa.md` — every QA rule with severity and trigger, the scoring model, how to read and fix a report, when to run it, how it differs from `deck_lint.py` and `deck_review.py`
+- `examples/qa-report.example.md` — worked QA report on `examples/status-report.json` (80/100, four warnings, four notes)
+- `tests/test_deck_qa.py` — 55 cases covering text weighting, number scanning (dates, years and single digits excluded), layout limits, role inference, every QA rule, theme contrast, scoring and CLI exit codes
+- `tests/test_theme_apply.py` — 34 cases covering colour maths, contrast checks, theme resolution, CLI behaviour and, when `python-pptx` is installed, re-skinning runs
 
 ### Changed
 - README.md — helper-script count, tools tree and reference tree list the extractor and the brief
 - SKILL.md — Step 0 condenses attached material into `source-brief.json` before the deck is drafted; Step 3 closes every slide purpose with the chunks it draws on; Step 4 drops any number that is in neither the brief nor the user's message; the tools index and edge cases cover attached sources
 - `tools/render_pptx.py` — accepts `schema_version` `"1.0"` and `"1.1"`; rendering is unchanged for text-only payloads
 - `tools/deck_lint.py` — accepts schema 1.1 and hard-gates the data layer: `json-data-layer` fires when a slide carries both a chart and a table, when a data block sits on slide 1, or when either block is not an object
+- `assets/layouts.json` — `headline_words` filled in for the variants that lacked it, so every role has a headline budget for the QA pass
+- README.md — helper count, assets/tools/references/examples trees, a "Check the slides" section and a "Theme a deck" section
+- SKILL.md — Step 2 picks slide roles from the layout library, Step 4 sizes copy to the role's budget, Step 5 runs the QA pass before hand-off, the tools index and edge cases cover theming and QA
 - `references/rendering-handoff.md` — new "Layers" section (band table, chart/table fidelity, degradation to `warnings`, `layers` in the `--json` report), updated "does not do", two troubleshooting rows and one hand-off checklist item
 
 ### Fixed
