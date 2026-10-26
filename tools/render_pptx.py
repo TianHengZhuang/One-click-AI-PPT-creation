@@ -6,6 +6,11 @@ payload described in references/output-contract.md and writes one PowerPoint
 slide per payload slide, into the bundled Office master or a corporate template
 supplied with --template.
 
+A slide may carry a structured `chart` or `table` block next to its bullets. Those
+render as native PowerPoint objects (editable data, not pictures), and a slide is
+laid out in fixed layers: headline band, copy zone, data zone, source footnote.
+Token-only `visual` text keeps the old behaviour and lands in the speaker notes.
+
     python tools/render_pptx.py examples/status-report.json
     python tools/render_pptx.py deck.json --template acme.potx --master-map acme-master-map.json
     python tools/render_pptx.py deck.json --check
@@ -34,8 +39,35 @@ EXIT_OK = 0
 EXIT_FAIL = 1
 EXIT_MISSING_DEP = 2
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSIONS = ("1.0", "1.1")
+SCHEMA_VERSION = SCHEMA_VERSIONS[-1]
 ROLES = ("title", "content", "section", "closing")
+
+# Layered layout, in inches, for the default 16:9 body. A slide is built bottom-up
+# from these bands; nothing may share a band with another layer.
+LAYERS = ("headline", "copy", "data", "footnote")
+HEADLINE_BAND = (0.55, 0.35, 12.23, 1.05)      # x, y, w, h
+BODY_TOP = 1.62
+BODY_BOTTOM = 6.30
+LEFT_GUTTER = 0.62
+COLUMN_GAP = 0.42
+DATA_SHARE = 0.56                               # data zone share of the body width
+FOOTNOTE_BAND = (0.62, 6.42, 12.23, 0.38)
+
+CHART_LIMITS = {"categories": (2, 12), "series": (1, 4), "points": 12}
+TABLE_LIMITS = {"columns": (2, 6), "rows": (1, 8)}
+CHART_TYPE_ALIASES = {
+    "column": "COLUMN_CLUSTERED",
+    "bar": "BAR_CLUSTERED",
+    "line": "LINE_MARKERS",
+    "area": "AREA",
+    "pie": "PIE",
+    "doughnut": "DOUGHNUT",
+    "stacked-column": "COLUMN_STACKED",
+    "stacked-bar": "BAR_STACKED",
+}
+CHART_TYPE_NAMES = tuple(CHART_TYPE_ALIASES)
+PIE_TYPES = ("pie", "doughnut")
 DEFAULT_LAYOUT_INDEX = {"title": 0, "content": 1}
 DEFAULT_VERSION = "v1.0.0"
 
@@ -116,8 +148,8 @@ def validate_payload(data: dict) -> list[str]:
         errors.append(f"meta.slide_count ({declared}) != len(slides) ({len(slides)})")
 
     schema = data.get("schema_version")
-    if schema is not None and str(schema) != SCHEMA_VERSION:
-        errors.append(f"unsupported schema_version {schema!r} (expected {SCHEMA_VERSION!r})")
+    if schema is not None and str(schema) not in SCHEMA_VERSIONS:
+        errors.append(f"unsupported schema_version {schema!r} (expected one of {SCHEMA_VERSIONS})")
 
     for index, slide in enumerate(slides, start=1):
         if not isinstance(slide, dict):
@@ -131,7 +163,219 @@ def validate_payload(data: dict) -> list[str]:
             errors.append(f"slide {index} has no bullets")
         elif not all(isinstance(item, str) and item.strip() for item in bullets):
             errors.append(f"slide {index} has an empty bullet")
+        # Optional data layer: chart or table, never both, and never on the title slide.
+        has_chart = slide.get("chart") is not None
+        has_table = slide.get("table") is not None
+        if has_chart and has_table:
+            errors.append(f"slide {index} carries both chart and table; pick one data layer")
+        if (has_chart or has_table) and index == 1:
+            errors.append(f"slide {index} is the title slide; move the data block to a content slide")
+        if has_chart:
+            note_errors, _ = check_chart(slide.get("chart"), f"slide {index}.chart")
+            errors.extend(note_errors)
+        if has_table:
+            note_errors, _ = check_table(slide.get("table"), f"slide {index}.table")
+            errors.extend(note_errors)
     return errors
+
+
+# ----------------------------------------------------------------- data layer
+
+
+def _is_number(value) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def check_chart(raw, where: str) -> tuple[list[str], list[str]]:
+    """Validate a chart block; returns (errors, warnings) without mutating input."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not isinstance(raw, dict):
+        return [f"{where} must be an object"], warnings
+
+    kind = raw.get("type", "column")
+    kind = str(kind).strip().lower()
+    if kind not in CHART_TYPE_ALIASES:
+        errors.append(f"{where}.type must be one of {', '.join(CHART_TYPE_NAMES)}; got {kind!r}")
+
+    low, high = CHART_LIMITS["categories"]
+    categories = raw.get("categories")
+    if not isinstance(categories, list) or not low <= len(categories) <= high:
+        errors.append(f"{where}.categories needs {low}-{high} items")
+        categories = []
+    elif not all(isinstance(item, (str, int, float)) and str(item).strip() for item in categories):
+        errors.append(f"{where}.categories has an empty label")
+        categories = []
+
+    series = raw.get("series")
+    low_s, high_s = CHART_LIMITS["series"]
+    if not isinstance(series, list) or not low_s <= len(series) <= high_s:
+        errors.append(f"{where}.series needs {low_s}-{high_s} items")
+        series = []
+    else:
+        width = len(categories)
+        for pos, entry in enumerate(series, start=1):
+            if not isinstance(entry, dict):
+                errors.append(f"{where}.series[{pos}] must be an object")
+                continue
+            values = entry.get("values")
+            if not isinstance(values, list) or len(values) != width:
+                errors.append(f"{where}.series[{pos}].values must have {width} numbers")
+                continue
+            if not all(_is_number(item) for item in values):
+                errors.append(f"{where}.series[{pos}].values must be numeric")
+
+    emphasis = raw.get("emphasis")
+    if emphasis is not None:
+        if not isinstance(emphasis, list) or not all(isinstance(i, int) for i in emphasis):
+            errors.append(f"{where}.emphasis must be a list of category indexes")
+        elif categories and any(i < 0 or i >= len(categories) for i in emphasis):
+            errors.append(f"{where}.emphasis has an index outside the categories")
+
+    if kind in PIE_TYPES and isinstance(series, list) and len(series) > 1:
+        warnings.append(f"{where}: {kind} charts plot one series, extra series ignored")
+    return errors, warnings
+
+
+def check_table(raw, where: str) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    if not isinstance(raw, dict):
+        return [f"{where} must be an object"], warnings
+
+    low, high = TABLE_LIMITS["columns"]
+    columns = raw.get("columns")
+    if not isinstance(columns, list) or not low <= len(columns) <= high:
+        errors.append(f"{where}.columns needs {low}-{high} headers")
+        columns = []
+    elif not all(isinstance(item, str) and item.strip() for item in columns):
+        errors.append(f"{where}.columns has an empty header")
+        columns = []
+
+    low_r, high_r = TABLE_LIMITS["rows"]
+    rows = raw.get("rows")
+    if not isinstance(rows, list) or not low_r <= len(rows) <= high_r:
+        errors.append(f"{where}.rows needs {low_r}-{high_r} rows")
+        rows = []
+    else:
+        for pos, row in enumerate(rows, start=1):
+            if not isinstance(row, list) or len(row) != len(columns):
+                errors.append(f"{where}.rows[{pos}] must have {len(columns)} cells")
+            elif not all(isinstance(cell, (str, int, float)) for cell in row):
+                errors.append(f"{where}.rows[{pos}] has a non-scalar cell")
+    return errors, warnings
+
+
+def plan_layers(slide_w: float, slide_h: float, has_data: bool) -> dict:
+    """Split the body into fixed bands; the data band never overlaps the copy zone."""
+    body_w = slide_w - 2 * LEFT_GUTTER
+    body_h = min(BODY_BOTTOM, slide_h - 0.55) - BODY_TOP
+    copy = (LEFT_GUTTER, BODY_TOP, body_w, body_h)
+    data = None
+    note = (FOOTNOTE_BAND[0], slide_h - 1.05, body_w, FOOTNOTE_BAND[3])
+    if has_data:
+        copy_w = round(body_w * (1 - DATA_SHARE) - COLUMN_GAP / 2, 3)
+        data_w = round(body_w - copy_w - COLUMN_GAP, 3)
+        copy = (LEFT_GUTTER, BODY_TOP, copy_w, body_h)
+        data = (round(LEFT_GUTTER + copy_w + COLUMN_GAP, 3), BODY_TOP, data_w, body_h)
+    headline = (HEADLINE_BAND[0], HEADLINE_BAND[1], round(slide_w - 2 * HEADLINE_BAND[0], 3),
+                HEADLINE_BAND[3])
+    return {"headline": headline, "copy": copy, "data": data, "footnote": note,
+            "slide": (slide_w, slide_h)}
+
+
+def _place(shape, zone, Inches) -> None:
+    x, y, w, h = zone
+    shape.left, shape.top = Inches(x), Inches(y)
+    shape.width, shape.height = Inches(w), Inches(h)
+
+
+def draw_chart(slide, chart_spec: dict, zone, where: str, warnings: list[str]) -> str:
+    """Add a native chart; returns the chart family actually used."""
+    from pptx.chart.data import CategoryChartData
+    from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
+    from pptx.dml.color import RGBColor
+    from pptx.util import Inches, Pt
+
+    kind = str(chart_spec.get("type", "column")).strip().lower()
+    chart_data = CategoryChartData()
+    chart_data.categories = [str(item) for item in chart_spec["categories"]]
+    series = chart_spec["series"]
+    if kind in PIE_TYPES:
+        series = series[:1]
+    for entry in series:
+        chart_data.add_series(str(entry.get("name") or "Series"), entry["values"])
+
+    chart_type = getattr(XL_CHART_TYPE, CHART_TYPE_ALIASES[kind])
+    frame = slide.shapes.add_chart(chart_type, 0, 0, 1, 1, chart_data)
+    _place(frame, zone, Inches)
+    chart = frame.chart
+
+    title = chart_spec.get("title")
+    if isinstance(title, str) and title.strip():
+        chart.has_title = True
+        chart.chart_title.text_frame.text = title.strip()
+        chart.chart_title.text_frame.paragraphs[0].font.size = Pt(14)
+        chart.chart_title.text_frame.paragraphs[0].font.bold = True
+    else:
+        chart.has_title = False
+
+    chart.has_legend = len(series) > 1 and kind not in PIE_TYPES
+    if chart.has_legend:
+        chart.legend.position = XL_LEGEND_POSITION.BOTTOM
+        chart.legend.include_in_layout = False
+        chart.legend.font.size = Pt(11)
+
+    unit = chart_spec.get("unit")
+    if isinstance(unit, str) and unit.strip() and kind not in PIE_TYPES:
+        try:
+            chart.value_axis.has_title = True
+            chart.value_axis.axis_title.text_frame.text = unit.strip()
+            chart.value_axis.axis_title.text_frame.paragraphs[0].font.size = Pt(11)
+        except (AttributeError, ValueError) as err:  # pragma: no cover - chart dependent
+            warnings.append(f"{where}: could not label the value axis ({err})")
+
+    try:
+        chart.font.size = Pt(12)
+        chart.font.name = "Segoe UI"
+    except (AttributeError, ValueError):  # pragma: no cover - chart dependent
+        pass
+
+    emphasis = chart_spec.get("emphasis") or []
+    if emphasis:
+        try:
+            points = chart.plots[0].series[0].points
+            for index in range(len(chart_spec["categories"])):
+                fill = points[index].format.fill
+                fill.solid()
+                fill.fore_color.rgb = RGBColor(0x1F, 0x38, 0x64) if index in emphasis else RGBColor(0xBD, 0xD0, 0xE3)
+        except (AttributeError, IndexError):  # pragma: no cover - chart dependent
+            warnings.append(f"{where}: emphasis colours not supported by this chart type")
+
+    return kind
+
+
+def draw_table(slide, table_spec: dict, zone, where: str, warnings: list[str]) -> dict:
+    """Add a native table; returns the geometry actually written."""
+    from pptx.util import Inches, Pt
+
+    columns = [str(item) for item in table_spec["columns"]]
+    rows = [[str(cell) for cell in row] for row in table_spec["rows"]]
+    shape = slide.shapes.add_table(len(rows) + 1, len(columns), 0, 0, 1, 1)
+    _place(shape, zone, Inches)
+    table = shape.table
+
+    for pos, header in enumerate(columns):
+        cell = table.cell(0, pos)
+        cell.text = header
+        cell.text_frame.paragraphs[0].font.size = Pt(12)
+        cell.text_frame.paragraphs[0].font.bold = True
+    for row_pos, row in enumerate(rows, start=1):
+        for col_pos, value in enumerate(row):
+            cell = table.cell(row_pos, col_pos)
+            cell.text = value
+            cell.text_frame.paragraphs[0].font.size = Pt(12)
+    return {"columns": len(columns), "rows": len(rows)}
 
 
 # ------------------------------------------------------------ master mapping
@@ -263,6 +507,8 @@ def render_deck(payload: dict, template: Path | None, mapping: dict | None, chec
         }
 
     Presentation, PP_PLACEHOLDER, Inches = import_pptx()
+    from pptx.dml.color import RGBColor
+    from pptx.util import Pt
 
     try:
         prs = Presentation(str(template)) if template else Presentation()
@@ -317,27 +563,68 @@ def render_deck(payload: dict, template: Path | None, mapping: dict | None, chec
         else:
             warnings.append(f"slide {index}: no title placeholder in layout {layout.name!r}")
 
+        chart_spec = slide_data.get("chart")
+        table_spec = slide_data.get("table")
+        has_data = isinstance(chart_spec, dict) or isinstance(table_spec, dict)
+        zones = plan_layers(prs.slide_width / 914400, prs.slide_height / 914400, has_data)
+        layers = {"headline": True, "copy": 0, "data": None, "footnote": None}
+
         if role == "title":
             subtitle = f"{meta.get('audience', '')} · {meta.get('purpose', '')} · ~{meta.get('est_minutes', '')} min"
             subtitle_ph = pick_placeholder(slide, config, "subtitle", subtitle_types, warnings)
             if subtitle_ph is not None:
                 subtitle_ph.text_frame.text = subtitle.strip(" ·")
         else:
-            body_ph = pick_placeholder(slide, config, "body", body_types, warnings)
             bullets = [str(item) for item in slide_data.get("bullets", [])]
+            if has_data and len(bullets) > 3:
+                warnings.append(f"slide {index}: {len(bullets)} bullets beside a data block, kept 3")
+                bullets = bullets[:3]
+            body_ph = pick_placeholder(slide, config, "body", body_types, warnings)
             if body_ph is not None:
+                if has_data:
+                    _place(body_ph, zones["copy"], Inches)
                 write_bullets(body_ph.text_frame, bullets)
             else:
-                box = slide.shapes.add_textbox(
-                    Inches(0.8), Inches(1.8),
-                    prs.slide_width - Inches(1.6), prs.slide_height - Inches(2.6),
-                )
+                box = slide.shapes.add_textbox(0, 0, 1, 1)
+                _place(box, zones["copy"], Inches)
                 write_bullets(box.text_frame, bullets)
                 warnings.append(f"slide {index}: no body placeholder, added a text box")
+            layers["copy"] = len(bullets)
+
+            if isinstance(chart_spec, dict):
+                _, note_warnings = check_chart(chart_spec, f"slide {index}.chart")
+                warnings.extend(note_warnings)
+                try:
+                    used = draw_chart(slide, chart_spec, zones["data"], f"slide {index}.chart", warnings)
+                    layers["data"] = f"chart:{used}"
+                    source = chart_spec.get("source")
+                except Exception as err:  # pragma: no cover - chart dependent
+                    warnings.append(f"slide {index}: chart dropped ({err})")
+                    source = None
+            elif isinstance(table_spec, dict):
+                source = table_spec.get("source")
+                try:
+                    info = draw_table(slide, table_spec, zones["data"], f"slide {index}.table", warnings)
+                    layers["data"] = f"table:{info['columns']}x{info['rows']}"
+                except Exception as err:  # pragma: no cover - table dependent
+                    warnings.append(f"slide {index}: table dropped ({err})")
+            else:
+                source = None
+
+            caption = source if isinstance(source, str) and source.strip() else None
+            if caption:
+                note_h = zones["footnote"]
+                note_frame = slide.shapes.add_textbox(
+                    Inches(note_h[0]), Inches(note_h[1]), Inches(note_h[2]), Inches(note_h[3]))
+                para = note_frame.text_frame.paragraphs[0]
+                para.text = f"Source: {caption.strip()}"
+                para.font.size = Pt(10)
+                para.font.color.rgb = RGBColor(0x59, 0x59, 0x59)
+                layers["footnote"] = caption.strip()
 
         set_notes(slide, str(slide_data.get("speaker_notes", "")), slide_data.get("visual"), warnings)
         built.append({"slide": index, "role": role, "layout": layout.name,
-                      "bullets": len(slide_data.get("bullets", []))})
+                      "bullets": layers["copy"], "layers": layers})
 
     if out_path is None:
         raise RenderError("output path missing")
@@ -430,6 +717,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"rendered {report['payload_slides']} slides -> {report['output']}")
             for entry in report["layout_resolution"]:
                 print(f"  {entry['role']:<8} -> {entry['layout']}  ({entry['via']})")
+            for entry in report["slides"]:
+                if entry["layers"]["data"]:
+                    print(f"  slide {entry['slide']}: data layer {entry['layers']['data']}")
             for warning in report["warnings"]:
                 print(f"  warning: {warning}")
     return EXIT_OK

@@ -1,0 +1,33 @@
+{
+  "name": "consulting",
+  "label": "Consulting",
+  "when": "Client work, board packs, anything reviewed by a partner. Navy ink, one blue accent, generous side margin.",
+  "palette": {
+    "bg": "#FFFFFF",
+    "ink": "#14213D",
+    "muted": "#5A6472",
+    "accent": "#0B5FFF",
+    "band": "#EDF1F7",
+    "rule": "#C9D3E0",
+    "on_accent": "#FFFFFF"
+  },
+  "font": {
+    "title": "Segoe UI Semibold",
+    "body": "Segoe UI",
+    "table": "Segoe UI"
+  },
+  "size": {
+    "title": 30,
+    "section": 24,
+    "body": 16,
+    "footnote": 10,
+    "table": 11
+  },
+  "chart_series": [
+    "#0B5FFF",
+    "#7A9CF5",
+    "#F2A03D",
+    "#C9D3E0"
+  ],
+  "table_header_fill": "#EDF1F7"
+}
