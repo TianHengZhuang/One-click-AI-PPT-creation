@@ -42,6 +42,8 @@ Choose from the 21 structures in references/slide-structures.md, or use its "Cho
 - Status report → Wins → Metrics → Issues → Next steps
 - Training / explainer → Concept → Why it matters → How it works → Examples → Practice
 
+Once the story is chosen, pick the slide roles from the layout library — `assets/layouts.json`, fourteen roles in 31 variants, each with a `when` line and a copy budget. Choose the role by the job the slide does (a `chart` slide with no chart is a bullet slide in the wrong role), and take its `limits` as the budget for the copy in Step 4. Geometry, roles and the bands are described in `references/layout-library.md`.
+
 ### Step 3 — Draft the outline
 
 Produce a numbered slide list. Each slide gets a working title (a full sentence, not a noun phrase) and a one-line purpose.
@@ -53,7 +55,7 @@ When a `source-brief.json` exists, close each purpose line with the chunks the s
 For every slide output:
 
 - **Headline**: a claim or takeaway, not a label ("Q3 revenue grew 18% on enterprise renewals", not "Revenue").
-- **3–5 bullet points max**, each under 12 words.
+- **3–5 bullet points max**, each under 12 words — or the tighter budget of the slide's role in `assets/layouts.json` when it has one. Copy that overflows its band is flagged by `tools/deck_qa.py`, not silently shrunk.
 - **Numbers you can point at**: every figure in a headline or bullet must appear in `source-brief.json` or in the user's own message. If it is in neither, drop the number or mark the gap — never round it into something plausible.
 - **One visual suggestion** per slide (chart, diagram, screenshot, icon). When the point is a number comparison the audience should read at a glance, ship it as a structured `chart` or `table` block in the payload too (schema 1.1, limits in `references/output-contract.md`) — the renderer turns it into a native object; keep the `visual` line regardless, it is the Markdown fallback.
 - **Speaker note**: 2–3 sentences the presenter can say out loud.
@@ -91,6 +93,8 @@ If a deck already exists — the user brings one to review, or you just wrote on
 
 Before a decision meeting, stress-test the deck against the room using the seat-by-seat pass in `references/audience-simulation.md`: pick two or three seats, ask each seat's questions against the slides, mark every answer answered / partial / gap, then recommend the smallest set of additions. Worked sample: `examples/audience-simulation.example.md`.
 
+Before hand-off, ask whether the slides will work in a room: `python tools/deck_qa.py <payload>.json` checks density, headlines, notes pace, table and chart load, and — with `--theme` — whether the palette is readable; `--strict` makes warnings fail, `--json` and `--report <file>.md` write a report. Rules and scoring: `references/visual-qa.md`; worked report: `examples/qa-report.example.md`. Fix errors first, then over-long copy, then density; do not shrink type to win a point.
+
 If the user asks for a real `.pptx` file, follow `references/rendering-handoff.md`: emit the structured payload first, lint the pack, then run `python tools/render_pptx.py <payload>.json`. Add `--template <corporate>.potx --master-map <map>.json` to land the deck in a corporate slide master (see `references/master-mapping.md`), and `--check` to resolve every layout without writing a file. The renderer needs `python-pptx`; if it cannot be installed, hand over the Markdown deck plus the payload instead.
 
 ## Copywriting rules
@@ -121,6 +125,7 @@ Write in the language the user asks for. When the output is Chinese, also apply 
 - User wants another language: write in that language, keep the same structure. For Chinese, apply references/zh-cn-adaptation.md.
 - User attaches a report, data file or notes: run Step 0 first, then draft from the brief; quote no figure the brief does not contain.
 - User brings an existing deck to fix: run `tools/deck_review.py` on it, fix the hard gates and the flagged copy, and return a corrected outline, keeping their own content and message.
+- User has a finished deck that looks off: theme it before redesigning it — `python tools/theme_apply.py deck.pptx --theme consulting|swiss|editorial`, then re-run `tools/deck_qa.py` on the payload; a palette will not fix six bullets.
 - User wants a real .pptx file: provide the full outline plus slide text in a format they can paste into PowerPoint/Keynote/Google Slides, and offer the structure for a rendering script.
 
 ## Examples
@@ -135,6 +140,9 @@ Audience simulation: references/audience-simulation.md; worked pass: examples/au
 Renderer (optional, needs python-pptx): tools/render_pptx.py — payload to .pptx, with corporate master mapping.
 Source extract: tools/source_extract.py (optional, standard library only; PDF / Word / PowerPoint / Excel need pypdf, python-docx, python-pptx or openpyxl) — attached material to one source-brief.json; what the brief holds: references/source-brief.md.
 Master map sample: examples/master-map.example.json.
+Layout library: assets/layouts.json (14 roles, 31 variants, copy budgets); reference: references/layout-library.md.
+Themes: assets/themes/{consulting,swiss,editorial}.json; `python tools/theme_apply.py <deck>.pptx --theme swiss` restyles an existing file (needs python-pptx); reference: references/themes.md.
+Visual QA: tools/deck_qa.py (optional, standard library only) — will these slides work in a room; rules: references/visual-qa.md; worked report: examples/qa-report.example.md.
 
 ---
 

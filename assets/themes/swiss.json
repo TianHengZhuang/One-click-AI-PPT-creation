@@ -1,0 +1,33 @@
+{
+  "name": "swiss",
+  "label": "Swiss",
+  "when": "Design reviews, product launches, a room that distrusts decoration. Black on white, one red accent, tight grid.",
+  "palette": {
+    "bg": "#FFFFFF",
+    "ink": "#111111",
+    "muted": "#555555",
+    "accent": "#E4002B",
+    "band": "#F2F2F2",
+    "rule": "#D0D0D0",
+    "on_accent": "#FFFFFF"
+  },
+  "font": {
+    "title": "Helvetica Neue",
+    "body": "Helvetica Neue",
+    "table": "Helvetica Neue"
+  },
+  "size": {
+    "title": 28,
+    "section": 22,
+    "body": 15,
+    "footnote": 9,
+    "table": 10
+  },
+  "chart_series": [
+    "#E4002B",
+    "#111111",
+    "#8C8C8C",
+    "#D9D9D9"
+  ],
+  "table_header_fill": "#F2F2F2"
+}

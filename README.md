@@ -6,7 +6,7 @@ Turn a bare topic into a complete business deck — outline, slide text, and spe
 
 One-Click PPT is a small Agent Skill that turns a topic into a presentation-ready deck: a structured outline, per-slide headlines, bullets, visual suggestions, and speaker notes. It works in clients that support the Agent Skills format, including Claude Code, Cursor, Codex, and Gemini CLI.
 
-No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and four optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, `tools/deck_review.py` audits a deck that already exists, `tools/render_pptx.py` renders a payload into a real `.pptx` (`python-pptx`), and `tools/source_extract.py` condenses attached source material into one `source-brief.json` (standard library only; PDF, Word, PowerPoint and Excel inputs need `pypdf`, `python-docx`, `python-pptx` or `openpyxl`).
+No API keys are required. The repository contains a `SKILL.md` file, supporting reference docs, and six optional helper scripts: `tools/deck_lint.py` cross-checks a multi-artifact deck pack, `tools/deck_review.py` audits a deck that already exists, `tools/deck_qa.py` checks whether the slides will work in a room, `tools/render_pptx.py` renders a payload into a real `.pptx`, `tools/theme_apply.py` restyles a `.pptx` to a bundled theme, and `tools/source_extract.py` condenses attached source material into one `source-brief.json`. Only the renderer and the theme tool need `python-pptx`; the rest are standard library only. PDF, Word, PowerPoint and Excel inputs to the extractor need `pypdf`, `python-docx`, `python-pptx` or `openpyxl`.
 
 It produces a slide-by-slide script. By default it does not create a `.pptx` file; the optional renderer turns the structured payload into one, with optional corporate slide-master mapping.
 
@@ -121,6 +121,12 @@ repository-root/
 ├── ROADMAP.md
 ├── CONTRIBUTING.md
 ├── SECURITY.md
+├── assets/
+│   ├── layouts.json               # 14 slide roles, 31 variants, copy budgets
+│   └── themes/
+│       ├── consulting.json        # navy + blue accent
+│       ├── swiss.json             # black on white, one red accent
+│       └── editorial.json         # warm paper, serif headlines
 ├── references/
 │   ├── slide-structures.md        # 21 deck structures by purpose
 │   ├── copywriting-guide.md       # copy rules and examples
@@ -133,11 +139,16 @@ repository-root/
 │   ├── master-mapping.md          # corporate slide-master layout/placeholder mapping
 │   ├── deck-review.md             # deck audit: hard gates, finding codes, scoring
 │   ├── source-brief.md            # source brief: sections, chunks, tables, numbers, evidence
+│   ├── layout-library.md          # the 14 slide roles, bands and copy budgets
+│   ├── themes.md                  # the three themes, contrast floors, adding a theme
+│   ├── visual-qa.md               # QA101-QA114, scoring, reading a report
 │   └── rehearsal-notes.md · executive-one-pager.md · audience-simulation.md    # speaker-only notes pack; pre-delivery seat pass
 ├── tools/
 │   ├── deck_lint.py               # pack consistency checker (optional)
 │   ├── deck_review.py             # existing-deck auditor (optional)
 │   ├── render_pptx.py             # payload → .pptx renderer (optional, needs python-pptx)
+│   ├── theme_apply.py             # re-skin a .pptx to a bundled theme (optional, needs python-pptx)
+│   ├── deck_qa.py                 # will these slides work in a room (optional)
 │   └── source_extract.py          # source documents → one source-brief.json (optional)
 └── examples/
     ├── status-report.md
@@ -168,6 +179,9 @@ repository-root/
 | `references/deck-review.md` | Auditing a deck that already exists |
 | `references/audience-simulation.md` | Stress-testing the deck against the room before a decision meeting |
 | `references/rehearsal-notes.md` | The user wants a rehearsal / speaker-only script |
+| `references/layout-library.md` | Choosing a layout, or sizing copy to a band |
+| `references/themes.md` | Re-skinning a deck, or adding a theme |
+| `references/visual-qa.md` | Checking a deck before it leaves, or reading a QA report |
 
 ## Examples
 
@@ -180,6 +194,7 @@ repository-root/
 | [deck-review.example.md](examples/deck-review.example.md) | Worked review report for the status-report deck |
 | [audience-simulation.example.md](examples/audience-simulation.example.md) | Worked three-seat simulation of the same deck |
 | [master-map.example.json](examples/master-map.example.json) | Worked corporate master map (layouts + placeholders) |
+| [qa-report.example.md](examples/qa-report.example.md) | Worked visual QA report (80/100) for the status-report deck |
 | [data-layer.example.json](examples/data-layer.example.json) | Same status deck with native charts and a table (schema 1.1) |
 | [crisis-comms.md](examples/crisis-comms.md) | Crisis communication — platform outage |
 | [investor-update.md](examples/investor-update.md) | Investor update — seed stage |
@@ -223,7 +238,41 @@ python tools/render_pptx.py deck.json --template acme.potx \
     --master-map acme-master-map.json                                      # corporate master
 ```
 
-Output follows the export naming convention: `{deck-slug}_{version}_{YYYYMMDD}.pptx`, or `{deck-slug}_{version}_{slot}min_{YYYYMMDD}.pptx` with `--slot`. Layout and placeholder resolution is described in `references/master-mapping.md` (name → keyword → index, with per-role placeholder indices); the full workflow, dependency and troubleshooting notes are in `references/rendering-handoff.md`. `python-pptx` is the only dependency in the repository — if it cannot be installed, hand over the Markdown deck plus the payload instead.
+Output follows the export naming convention: `{deck-slug}_{version}_{YYYYMMDD}.pptx`, or `{deck-slug}_{version}_{slot}min_{YYYYMMDD}.pptx` with `--slot`. Layout and placeholder resolution is described in `references/master-mapping.md` (name → keyword → index, with per-role placeholder indices); the full workflow, dependency and troubleshooting notes are in `references/rendering-handoff.md`. `python-pptx` is the only third-party dependency in the repository (the renderer and the theme tool use it) — if it cannot be installed, hand over the Markdown deck plus the payload instead.
+
+## Check the slides before they leave (optional)
+
+Rendering proves the file exists; it does not prove the slides work in a room. `tools/deck_qa.py` reads a payload, the copy budgets in `assets/layouts.json` and — optionally — a theme, then reports what a reader would notice:
+
+```bash
+python tools/deck_qa.py examples/status-report.json                      # 80/100 (B), four warnings
+python tools/deck_qa.py deck.json --theme swiss                          # also checks contrast
+python tools/deck_qa.py deck.json --strict --report qa.md                # CI gate plus Markdown report
+python tools/deck_qa.py deck.json --json                                 # machine-readable
+```
+
+Fourteen rules cover headline length and honesty, bullet count and length, unsupported figures, notes pace, chart and table load, repeated openers and unreadable palettes (QA101-QA114, all documented in `references/visual-qa.md`). Errors mean the slide cannot do its job; warnings mean the room will feel it; notes are opportunities and never cost a point. The score starts at 100 and loses 15 per error and 5 per warning. `examples/qa-report.example.md` is a worked report on the status-report deck: a label headline, a 15-word bullet, three slides carrying figures with no chart.
+
+It is standard library only, and it deliberately does not gate density the user asked for — a data appendix is allowed to break the word budget; say so in the hand-off instead of trimming it.
+
+## Theme a deck (optional)
+
+`tools/theme_apply.py` re-skins an existing `.pptx` to one of three bundled themes: backgrounds, title and body type, chart series colours, table header fills and cell type. Geometry is untouched, so it works on a deck a designer has already laid out, and it can be re-run when the brand moves.
+
+```bash
+python tools/theme_apply.py deck.pptx --list                             # consulting, swiss, editorial
+python tools/theme_apply.py deck.pptx --theme swiss
+python tools/theme_apply.py deck.pptx --theme editorial --out board_q3.pptx
+python tools/theme_apply.py deck.pptx --theme swiss --check              # validate contrast only
+```
+
+| Theme | Reads as | Use it for |
+|-------|----------|------------|
+| `consulting` | Navy ink, blue accent, generous side margin | Client work, board packs, anything reviewed by a partner |
+| `swiss` | Black on white, one red accent, tight grid | Design reviews, product launches, a room that distrusts decoration |
+| `editorial` | Warm paper, serif type, brick accent | Narrative decks, investor updates, anything read as well as watched |
+
+A theme is rejected when text cannot be read from the back of a room: `ink` on `bg` must clear 7:1, `muted` 4.5:1, `accent` 3:1, and no type below 9pt. `--check` and `tools/deck_qa.py --theme` both enforce those floors. Theme anatomy, the contrast table and how to add your own palette: `references/themes.md`.
 
 ## Related projects
 
