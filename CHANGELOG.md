@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.0.0 (unreleased)
+## v2.0.0 (2026-10-26)
 
 ### Added
 - `tools/source_extract.py` — condenses attached source material (PDF, Word, spreadsheets, PowerPoint, Markdown, CSV/TSV, plain text, folders) into one `source-brief.json`: sections, addressable chunks (`file.pdf#3`), tables and deduplicated numbers with context; a single unreadable file never stops the run; standard library only, binary formats need `pypdf` / `python-docx` / `python-pptx` / `openpyxl` and fall back with an install hint when missing
