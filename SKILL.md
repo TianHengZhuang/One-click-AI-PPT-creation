@@ -12,8 +12,23 @@ Build a complete, presentation-ready business deck from a single topic. No exter
 - User asks for a PPT / PowerPoint / slide deck / pitch deck / presentation.
 - User has a topic but no structure.
 - User needs speaker notes or talking points for each slide.
+- User attaches a report, spreadsheet, deck or notes the deck must be built from.
 
 ## Workflow
+
+### Step 0 — Read the source first (only when material is attached)
+
+When the request comes with files — a PDF, a Word document, a spreadsheet, a slide deck, a folder of notes — condense them into one brief before drafting anything:
+
+```bash
+python tools/source_extract.py <files-or-folders> --out source-brief.json
+```
+
+Draft from `source-brief.json`, not from a skim of the attachments. The brief holds sections, addressable chunks (`report.pdf#3`), tables, and deduplicated numbers with the sentence around each one; every field is described in `references/source-brief.md`. Add `--recursive` for folders, `--max-chars` to trim long documents.
+
+If the extractor cannot run — no Python, or a binary format whose parser is missing — say so in one line, read the files directly, and keep the same discipline by hand: note the section each number came from. A single unreadable file is not a reason to stop; skip it and name it in the hand-off.
+
+No attachments? Skip this step and go to Step 1.
 
 ### Step 1 — Clarify (ask only if truly missing)
 
@@ -31,12 +46,15 @@ Choose from the 21 structures in references/slide-structures.md, or use its "Cho
 
 Produce a numbered slide list. Each slide gets a working title (a full sentence, not a noun phrase) and a one-line purpose.
 
+When a `source-brief.json` exists, close each purpose line with the chunks the slide draws on: `(evidence: report.pdf#3, report.pdf#5)`. A slide with no chunk behind it is a slide with no source — keep it only as a transition or a section break. If the brief has no chunk that supports a slide you wanted, that is a gap in the source: drop the slide or ask the user for the missing material.
+
 ### Step 4 — Write each slide
 
 For every slide output:
 
 - **Headline**: a claim or takeaway, not a label ("Q3 revenue grew 18% on enterprise renewals", not "Revenue").
 - **3–5 bullet points max**, each under 12 words.
+- **Numbers you can point at**: every figure in a headline or bullet must appear in `source-brief.json` or in the user's own message. If it is in neither, drop the number or mark the gap — never round it into something plausible.
 - **One visual suggestion** per slide (chart, diagram, screenshot, icon).
 - **Speaker note**: 2–3 sentences the presenter can say out loud.
 
@@ -101,6 +119,7 @@ Write in the language the user asks for. When the output is Chinese, also apply 
 
 - Topic is vague ("something about marketing"): propose 3 concrete angles and let the user pick.
 - User wants another language: write in that language, keep the same structure. For Chinese, apply references/zh-cn-adaptation.md.
+- User attaches a report, data file or notes: run Step 0 first, then draft from the brief; quote no figure the brief does not contain.
 - User brings an existing deck to fix: run `tools/deck_review.py` on it, fix the hard gates and the flagged copy, and return a corrected outline, keeping their own content and message.
 - User wants a real .pptx file: provide the full outline plus slide text in a format they can paste into PowerPoint/Keynote/Google Slides, and offer the structure for a rendering script.
 

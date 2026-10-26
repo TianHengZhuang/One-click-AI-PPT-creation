@@ -57,6 +57,16 @@ class MarkdownTests(unittest.TestCase):
         self.assertTrue(first["path"].endswith("long.md"))
         self.assertLessEqual(first["chars"], se.DEFAULT_CHUNK_CHARS)
 
+    def test_chunk_ids_are_unique_across_sections(self) -> None:
+        body = "\n".join(f"Sentence number {i} about the market." for i in range(200))
+        path = write(self.tmp, "multi.md", f"# One\n\n{body}\n\n# Two\n\n{body}\n")
+        entry = se.read_source(path, se.DEFAULT_MAX_CHARS)
+        self.assertGreater(len(entry["sections"]), 1)
+        ids = [c["id"] for c in entry["chunks"]]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertTrue(any(i.endswith("multi.md#1") for i in ids))
+        self.assertTrue(any(i.endswith("multi.md#2") for i in ids))
+
     def test_max_chars_truncates_and_warns(self) -> None:
         path = write(self.tmp, "big.md", "# T\n\n" + ("word " * 5000))
         entry = se.read_source(path, 500)

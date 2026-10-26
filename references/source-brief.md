@@ -95,7 +95,10 @@ asking.
 Field rules worth knowing:
 
 - `chunks[].id` is `<path>#<n>` and stable for a given input order — cite it in
-  the draft's source notes so a claim can be walked back to a passage.
+  the draft's source notes so a claim can be walked back to a passage. Numbering
+  runs across the whole document, so ids are unique even when a file has many
+  sections: `report.pdf#1` appears once, and citing it always resolves to the
+  same passage.
 - `chunks[].section` repeats the heading so a retrieved chunk is never orphaned.
 - `numbers[]` keeps the sentence around the figure, because `18%` means nothing
   without the noun next to it. Duplicates are collapsed on
