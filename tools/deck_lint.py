@@ -61,7 +61,7 @@ REQUIRED_SLIDE = {
 }
 VALID_PURPOSE = {"inform", "persuade", "pitch", "report", "train"}
 
-SCHEMA_VERSION = "1.0"
+SUPPORTED_SCHEMA_VERSIONS = ("1.0", "1.1")   # 1.1 adds the optional chart / table data layer
 META_TIME_TOLERANCE = 0.11      # |est_minutes - round(sum(est_seconds)/60, 1)|
 SLOT_DRIFT_WARN = 0.15          # contract: >15% drift between estimate and slot
 BULLET_MAX = 5                  # over the cap is worth a warning
@@ -219,11 +219,13 @@ def check_json_payload(payload, report: Report) -> dict | None:
     if any(k not in payload for k in ("meta", "slides")):
         return None
 
-    if payload.get("schema_version") != SCHEMA_VERSION:
+    if payload.get("schema_version") not in SUPPORTED_SCHEMA_VERSIONS:
         report.error(
             "json-schema-version",
             art,
-            f"schema_version must be \"{SCHEMA_VERSION}\", got {payload.get('schema_version')!r}",
+            "schema_version must be one of "
+            f"{', '.join(repr(item) for item in SUPPORTED_SCHEMA_VERSIONS)}, "
+            f"got {payload.get('schema_version')!r}",
         )
 
     meta = payload.get("meta")
@@ -269,6 +271,23 @@ def check_json_payload(payload, report: Report) -> dict | None:
                 art,
                 f"{where}.id is {slide.get('id')!r}, expected {index} (1-based, in order)",
             )
+        has_chart = "chart" in slide
+        has_table = "table" in slide
+        if has_chart and has_table:
+            report.error(
+                "json-data-layer",
+                art,
+                f"{where} carries both chart and table — one data layer per slide",
+            )
+        if (has_chart or has_table) and index == 1:
+            report.error(
+                "json-data-layer",
+                art,
+                f"{where} is the title slide; the data layer belongs on a content slide",
+            )
+        for key in ("chart", "table"):
+            if key in slide and not isinstance(slide[key], dict):
+                report.error("json-data-layer", art, f"{where}.{key} must be an object")
         bullets = slide.get("bullets")
         if isinstance(bullets, list) and len(bullets) > BULLET_MAX:
             report.warn(
